@@ -44,8 +44,8 @@ const Guarantees = () => {
     });
 
     return (
-        <Box ref={guaranteeRef} py={12} px={4} bg="rgb(5, 18, 32)">
-            <VStack spacing={8} maxW="500px" mx="auto" alignItems="flex-start">
+        <Box id="guarantees" mb={2} ref={guaranteeRef} py={8} px={4} bg="transparent">
+            <VStack spacing={8} maxW="500px" mx="auto" alignItems="flex-start" bg="transparent">
                 {guarantees.map((guarantee, index) => (
                     <motion.div
                         key={index}
