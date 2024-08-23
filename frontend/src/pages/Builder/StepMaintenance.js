@@ -6,7 +6,7 @@ const StepMaintenance = ({ maintenanceOptIn, setMaintenanceOptIn, maintenanceCos
         <VStack spacing={6}>
             <Heading size="lg" color="white">Monthly Maintenance</Heading>
             <Text fontStyle="italic" fontSize="sm" color="teal.200" textAlign="center">
-                We offer lifetime monthly maintenance for your website.
+                We offer lifetime monthly maintenance for your website. 1st month is free!
             </Text>
             <Flex justifyContent="space-between" width="100%">
                 <Text fontSize="lg" color="white">Opt-in for Maintenance (${maintenanceCost}/month):</Text>

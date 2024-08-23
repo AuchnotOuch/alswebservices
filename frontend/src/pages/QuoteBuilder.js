@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import StepOne from './Builder/StepOne';
 import StepTwo from './Builder/StepTwo';
 import StepThree from './Builder/StepThree';
@@ -70,6 +70,22 @@ const QuoteBuilder = () => {
 
         return maintenanceCost;
     };
+    // Function to calculate the total price based on pages, media fee, and add-ons
+    const calculateTotalPrice = () => {
+        const addOnPrices = addOns.reduce((total, label) => {
+            const addOnOption = addOnOptions.find(option => option.label === label);
+            return total + (addOnOption ? addOnOption.price : 0);
+        }, 0);
+
+        const mediaFeeValue = hasMedia === "no" ? mediaFee : 0;
+        const total = (numPages * pricePerPage) + addOnPrices + mediaFeeValue;
+        setTotalPrice(total);
+    };
+
+    // Recalculate totalPrice whenever numPages, addOns, or hasMedia changes
+    useEffect(() => {
+        calculateTotalPrice();
+    }, [numPages, addOns, hasMedia])
 
     // Calculate maintenance cost
     const maintenanceCost = calculateMaintenanceCost(numPages, addOns);
@@ -159,7 +175,7 @@ const QuoteBuilder = () => {
     ];
 
     return (
-        <Box display="flex" justifyContent="center" alignItems="center" height="100vh" width="auto">
+        <Box overflow="hidden" display="flex" justifyContent="center" alignItems="center" height="100vh" width="auto">
             <motion.div
                 key={currentStep}
                 initial={{ opacity: 0, x: -100 }}

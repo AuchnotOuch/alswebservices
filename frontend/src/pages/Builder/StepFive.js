@@ -3,22 +3,24 @@ import { VStack, Heading, Text, Box, Flex, Button, HStack } from "@chakra-ui/rea
 
 const StepFive = ({ totalPrice, numPages, pricePerPage, additionalFee, addOns, addOnOptions, hasMedia, mediaFee, maintenanceCost, onNext, onBack }) => {
     return (
-        <VStack spacing={6}>
+        <VStack spacing={6} height="80vh" justify="center" alignItems="center">
             <Heading size="lg" color="white">Here's a breakdown of the costs:</Heading>
             <Text fontStyle="italic" fontSize="sm" color="teal.200" textAlign="center">
                 Please note, no charges will be made at this time. Payment will only be required after our initial appointment.
             </Text>
-            <Box display="flex" flexDir="column" justifyContent="space-between" width="400px" height="auto">
+
+            {/* Restrict the height of the breakdown container */}
+            <Box display="flex" flexDir="column" justifyContent="space-between" width="400px" height="auto" maxH="40vh" overflowY="auto" p={4} bg="gray.900" borderRadius="lg" boxShadow="0px 0px 20px rgba(0, 0, 0, 0.2)">
                 <Flex justifyContent="space-between" width="100%">
-                    <Text fontSize="sm" color="white">Pages:</Text>
-                    <Text fontSize="sm" color="white">{numPages} x ${pricePerPage} = ${numPages * pricePerPage}</Text>
+                    <Text fontSize="md" color="white">Pages:</Text>
+                    <Text fontSize="md" color="white">{numPages} x ${pricePerPage} = ${numPages * pricePerPage}</Text>
                 </Flex>
 
                 {/* Display Stock Media Fee */}
                 {hasMedia === "no" && (
                     <Flex justifyContent="space-between" width="100%">
-                        <Text fontSize="sm" color="white">Stock Media Fee:</Text>
-                        <Text fontSize="sm" color="white">${mediaFee}</Text>
+                        <Text fontSize="md" color="white">Stock Media Fee:</Text>
+                        <Text fontSize="md" color="white">${mediaFee}</Text>
                     </Flex>
                 )}
 
@@ -30,21 +32,21 @@ const StepFive = ({ totalPrice, numPages, pricePerPage, additionalFee, addOns, a
                             return (
                                 addOnOption && (
                                     <Flex key={index} justifyContent="space-between" width="100%">
-                                        <Text fontSize="sm" color="white">{addOnOption.label}:</Text>
-                                        <Text fontSize="sm" color="white">${addOnOption.price}</Text>
+                                        <Text fontSize="md" color="white">{addOnOption.label}:</Text>
+                                        <Text fontSize="md" color="white">${addOnOption.price}</Text>
                                     </Flex>
                                 )
                             );
                         })}
                     </>
                 )}
-
+                <hr></hr>
                 {/* Display Total Price */}
                 <Flex justifyContent="space-between" width="100%">
                     <Text fontSize="lg" color="rgb(236, 97, 71)" fontWeight="bold">Total:</Text>
                     <Text fontSize="lg" color="rgb(236, 97, 71)" fontWeight="bold">${totalPrice}</Text>
                 </Flex>
-
+                <hr></hr>
                 {/* Display Monthly Maintenance Charge */}
                 {maintenanceCost > 0 && (
                     <Flex justifyContent="space-between" width="100%" mt={4}>
