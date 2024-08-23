@@ -34,7 +34,7 @@ const HeroSection = () => {
                     </Text>
 
                     {/* Down arrow button for smooth scrolling */}
-                    <ScrollLink to="services" smooth={true} duration={500} offset={-100}>
+                    <ScrollLink to="guarantees" smooth={true} duration={500} offset={-100}>
                         <IconButton
                             aria-label="Scroll down"
                             icon={<FaArrowDown />}

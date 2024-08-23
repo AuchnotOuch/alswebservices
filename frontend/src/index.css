@@ -25,3 +25,10 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.confetti-piece {
+  position: absolute;
+  /* border-radius: 50%; */
+  opacity: 0.9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
