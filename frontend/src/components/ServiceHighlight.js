@@ -11,8 +11,8 @@ import SlideFour from './ServiceSlides/SlideFour';
 const ServiceHighlight = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [isInView, setIsInView] = useState(false);
-    const [isLaunching, setIsLaunching] = useState(false); // For rocket launch animation
-    const [sectionsHidden, setSectionsHidden] = useState(false); // Controls hiding sections after launch
+    const [isLaunching, setIsLaunching] = useState(false);
+    const [sectionsHidden, setSectionsHidden] = useState(false);
     const serviceHighlightRef = useRef(null);
     const navigate = useNavigate();
 
@@ -29,17 +29,17 @@ const ServiceHighlight = () => {
     const handleGetStarted = () => {
         setIsLaunching(true);
         setTimeout(() => {
-            setSectionsHidden(true); // Hide sections for rocket launch
+            setSectionsHidden(true);
         }, 50);
         setTimeout(() => {
-            navigate("/build"); // Navigate after the rocket animation
+            navigate("/build");
         }, 2500);
     };
 
     const rocketMotion = {
         initial: { y: 0 },
         animate: {
-            y: -1000, // Move rocket upwards
+            y: -1000,
             transition: { duration: 3, ease: "easeInOut" }
         }
     };
@@ -78,7 +78,6 @@ const ServiceHighlight = () => {
         <VStack id="service-highlight" ref={serviceHighlightRef} spacing={8} alignItems="center" justify="space-evenly" h="80vh" bg="transparent" position="relative" zIndex={99}>
             {!sectionsHidden && (
                 <>
-                    {/* Slide Container */}
                     <Box
                         p={9}
                         w="100%"
@@ -93,11 +92,11 @@ const ServiceHighlight = () => {
                             initial={{ opacity: 0, y: -20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5 }}
+                            aria-live="polite"
                         >
                             {slides[currentSlide]}
                         </motion.div>
 
-                        {/* Arrow buttons inside the slide container */}
                         <HStack justify="space-between" position="absolute" bottom={4} left={4} right={4} zIndex={2}>
                             <IconButton
                                 icon={<ArrowBackIcon />}
@@ -106,6 +105,7 @@ const ServiceHighlight = () => {
                                 onClick={handlePreviousSlide}
                                 cursor="pointer"
                                 zIndex={99}
+                                aria-label="Previous Slide"
                             />
                             <IconButton
                                 icon={<ArrowForwardIcon />}
@@ -114,26 +114,27 @@ const ServiceHighlight = () => {
                                 onClick={handleNextSlide}
                                 cursor="pointer"
                                 zIndex={99}
+                                aria-label="Next Slide"
                             />
                         </HStack>
                     </Box>
 
-                    {/* Get Started Button */}
                     <HStack spacing={4} mt={0} zIndex={99}>
-                        <Button w="300px" h="100px" fontSize="xxx-large" colorScheme="teal" variant="outline" onClick={handleGetStarted}>
+                        <Button aria-label="Get Started with Building Your Website" w="300px" h="100px" fontSize="xxx-large" colorScheme="teal" variant="outline" onClick={handleGetStarted}>
                             Get Started
                         </Button>
                     </HStack>
                 </>
             )}
 
-            {/* Rocket Animation */}
             {isLaunching && (
                 <motion.div
                     initial="initial"
                     animate="animate"
                     variants={rocketMotion}
                     style={{ position: 'absolute', bottom: 0, width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                    role="img"
+                    aria-label="Rocket launching animation"
                 >
                     <Box
                         display="flex"
@@ -148,7 +149,7 @@ const ServiceHighlight = () => {
                         />
                         <Box
                             className="rocket-thruster"
-                            ml={-2.5} // Adjust this value to fine-tune the positioning
+                            ml={-2.5}
                         />
                     </Box>
                 </motion.div>

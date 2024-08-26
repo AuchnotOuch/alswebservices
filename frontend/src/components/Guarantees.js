@@ -27,6 +27,12 @@ const Guarantees = () => {
         };
     }, []);
 
+    useEffect(() => {
+        if (isVisible) {
+            guaranteeRef.current.focus();
+        }
+    }, [isVisible]);
+
     const guarantees = [
         { icon: "fa-paint-roller", text: "Professional designs" },
         { icon: "fa-mobile-screen-button", text: "Mobile-friendly and responsive layouts" },
@@ -45,7 +51,7 @@ const Guarantees = () => {
     });
 
     return (
-        <Box id="guarantees" ref={guaranteeRef} py={0} px={4} bg="transparent">
+        <Box id="guarantees" ref={guaranteeRef} py={0} px={4} bg="transparent" tabIndex={-1} role="region" aria-label="Guarantees Section">
             <VStack spacing={8} maxW="500px" mx="auto" alignItems="center" bg="transparent">
                 {guarantees.map((guarantee, index) => (
                     <motion.div
@@ -58,15 +64,16 @@ const Guarantees = () => {
                         <VStack
                             spacing={4}
                             align="center"
-                            direction={{ base: "column", md: "row" }} // Stack vertically on smaller screens
+                            direction={{ base: "column", md: "row" }}
                         >
                             <Box
                                 as="i"
                                 className={`fa-solid ${guarantee.icon}`}
                                 fontSize={{ base: "3xl", md: "5xl" }}
                                 color="rgb(236, 97, 71)"
+                                aria-label={guarantee.text}
                             />
-                            <Text fontSize={{ base: "md", md: "xl" }} color="white">
+                            <Text as="h2" fontSize={{ base: "md", md: "xl" }} color="white">
                                 {guarantee.text}
                             </Text>
                         </VStack>
@@ -74,7 +81,7 @@ const Guarantees = () => {
                 ))}
                 <ScrollLink to="service-highlight" smooth={true} duration={500} offset={-100}>
                     <IconButton
-                        aria-label="Scroll down"
+                        aria-label="Scroll down to service highlights section"
                         icon={<FaArrowDown />}
                         size="lg"
                         variant="outline"

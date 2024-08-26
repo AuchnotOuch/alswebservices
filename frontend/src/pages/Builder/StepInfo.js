@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { VStack, Button, Text, Heading, HStack, IconButton } from "@chakra-ui/react";
 import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 
@@ -16,6 +16,13 @@ const StepInfo = ({ onNext }) => {
     ];
 
     const [currentSlide, setCurrentSlide] = useState(0);
+    const headingRef = useRef(null)
+
+    useEffect(() => {
+        if (headingRef.current) {
+            headingRef.current.focus()
+        }
+    }, [currentSlide])
 
     const handleNextSlide = () => {
         if (currentSlide < slides.length - 1) {
@@ -31,14 +38,12 @@ const StepInfo = ({ onNext }) => {
 
     return (
         <VStack spacing={6} align="center" textAlign="center">
-            <Heading textAlign="center" color="teal.300" size="lg">Welcome to the Price Builder</Heading>
+            <Heading as="h2" textAlign="center" color="teal.300" size="lg">Welcome to the Price Builder</Heading>
 
-            {/* Slideshow content */}
             <Text textAlign="left" fontSize="lg" color="white">
                 {slides[currentSlide]}
             </Text>
 
-            {/* Arrow buttons */}
             <HStack spacing={4}>
                 <IconButton
                     icon={<ArrowBackIcon />}
@@ -56,7 +61,6 @@ const StepInfo = ({ onNext }) => {
                 />
             </HStack>
 
-            {/* Show the "Start Price Builder" button only on the last slide */}
             {currentSlide === slides.length - 1 && (
                 <Button colorScheme="teal" onClick={onNext} size="lg">
                     Start Price Builder

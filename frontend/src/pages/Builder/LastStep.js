@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Heading, Text, VStack, Button } from "@chakra-ui/react";
-import { motion } from "framer-motion";
 
 const LastStep = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+
     useEffect(() => {
         createConfetti();
     }, []);
@@ -60,24 +60,26 @@ const LastStep = () => {
             }, initialSpeed + driftSpeed);
         }
     };
+
     const onBackToHome = () => {
         navigate('/')
-    }
+    };
+
     return (
         <VStack spacing={6} textAlign="center" mt={16}>
-            <Heading size="xl" color="teal.400">
+            <Heading as="h2" size="xl" color="teal.400" aria-label="Congratulations message">
                 Congratulations!
             </Heading>
-            <Text fontSize="lg" color="gray.200">
+            <Text fontSize="lg" color="gray.200" aria-label="You have taken the first step toward success.">
                 You've taken the first step towards your business's online success.
             </Text>
-            <Text fontSize="lg" color="gray.200">
+            <Text fontSize="lg" color="gray.200" aria-label="We can't wait to bring your vision to life.">
                 We can't wait to bring your vision to life. Get ready to elevate your brand!
             </Text>
 
             <Box id="confetti-container" position="relative" height="0" width="100%" />
 
-            <Button colorScheme="teal" size="lg" onClick={onBackToHome}>
+            <Button colorScheme="teal" size="lg" onClick={onBackToHome} aria-label="Return to homepage">
                 Back to Home
             </Button>
         </VStack>

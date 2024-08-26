@@ -161,7 +161,6 @@ const QuoteBuilder = () => {
 
         return maintenanceCost;
     };
-    // Function to calculate the total price based on pages, media fee, and add-ons
     const calculateTotalPrice = () => {
         const addOnPrices = addOns.reduce((total, label) => {
             const addOnOption = addOnOptions.find(option => option.label === label);
@@ -173,12 +172,10 @@ const QuoteBuilder = () => {
         setTotalPrice(total);
     };
 
-    // Recalculate totalPrice whenever numPages, addOns, or hasMedia changes
     useEffect(() => {
         calculateTotalPrice();
     }, [numPages, addOns, hasMedia])
 
-    // Calculate maintenance cost
     const maintenanceCost = calculateMaintenanceCost(numPages, addOns);
 
     const handleNextClick = () => {
@@ -284,7 +281,7 @@ const QuoteBuilder = () => {
     ];
 
     return (
-        <Box overflow="hidden" display="flex" justifyContent="center" alignItems="center" height="100vh" width="auto">
+        <Box aria-live='polite' overflow="hidden" display="flex" justifyContent="center" alignItems="center" height="100vh" width="auto">
             <motion.div
                 key={currentStep}
                 initial={{ opacity: 0, x: -100 }}
@@ -301,6 +298,8 @@ const QuoteBuilder = () => {
                     bg="rgba(5, 18, 32, .7)"
                     p={8}
                     boxShadow="0 4px 50px rgba(56, 178, 172, 0.6)"
+                    role="region"
+                    aria-labelledby={`step-${currentStep}`}
                 >
                     {steps[currentStep - 1]}
                 </VStack>

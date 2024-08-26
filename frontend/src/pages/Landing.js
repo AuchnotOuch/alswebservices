@@ -1,19 +1,18 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Box } from "@chakra-ui/react";
 import HeroSection from '../components/HeroSection';
 import ServiceHighlight from '../components/ServiceHighlight';
 import Guarantees from '../components/Guarantees';
-import { startBackgroundAnimation } from '../assets/backgroundAnimation'; // Import the animation function
 
 const Landing = () => {
 
     return (
         <>
-            <Box>
+            <Box as="main" id="main-content" role="main">
                 <HeroSection />
-                <Box height="500px" /> {/* Spacer */}
+                <Box height="500px" role="presentation" aria-hidden="true" /> {/* Spacer */}
                 <Guarantees />
-                <Box height="500px" /> {/* Spacer */}
+                <Box height="500px" role="presentation" aria-hidden="true" /> {/* Spacer */}
                 <ServiceHighlight />
             </Box>
         </>

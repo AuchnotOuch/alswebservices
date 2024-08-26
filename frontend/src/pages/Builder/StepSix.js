@@ -4,7 +4,7 @@ import { VStack, Heading, Text, Input, Button, HStack, Box } from "@chakra-ui/re
 const StepSix = ({ name, setName, email, setEmail, phone, setPhone, companyName, setCompanyName, onNext, onBack }) => {
     return (
         <VStack spacing={1} alignItems="center" textAlign="center">
-            <Heading color="teal.300" size="lg">Contact Information</Heading>
+            <Heading as="h2" color="teal.300" size="lg">Contact Information</Heading>
 
             <Box width="100%" maxW="500px">
                 <Text fontSize="lg" color="white" mb={2}>Name:</Text>
@@ -18,9 +18,11 @@ const StepSix = ({ name, setName, email, setEmail, phone, setPhone, companyName,
                     errorBorderColor="red.300"
                     color="white"
                     mb={2}
+                    aria-required="true"
+                    aria-describedby={!name ? "name-error" : undefined}
                 />
                 {!name && (
-                    <Text color="red.300" fontSize="sm" mb={2}>Name is required.</Text>
+                    <Text id="name-error" color="red.300" fontSize="sm" mb={2}>Name is required.</Text>
                 )}
             </Box>
 
@@ -37,12 +39,14 @@ const StepSix = ({ name, setName, email, setEmail, phone, setPhone, companyName,
                     errorBorderColor="red.300"
                     color="white"
                     mb={2}
+                    aria-required="true"
+                    aria-describedby={!email ? "email-error" : email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? "email-invalid" : undefined}
                 />
                 {!email && (
-                    <Text color="red.300" fontSize="sm" mb={2}>Email is required.</Text>
+                    <Text id="email-error" color="red.300" fontSize="sm" mb={2}>Email is required.</Text>
                 )}
                 {email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && (
-                    <Text color="red.300" fontSize="sm" mb={2}>Please enter a valid email address.</Text>
+                    <Text id="email-invalid" color="red.300" fontSize="sm" mb={2}>Please enter a valid email address.</Text>
                 )}
             </Box>
 
@@ -59,9 +63,11 @@ const StepSix = ({ name, setName, email, setEmail, phone, setPhone, companyName,
                     errorBorderColor="red.300"
                     color="white"
                     mb={2}
+                    aria-required="true"
+                    aria-describedby={!phone ? "phone-error" : undefined}
                 />
                 {!phone && (
-                    <Text color="red.300" fontSize="sm" mb={2}>Phone number is required.</Text>
+                    <Text id="phone-error" color="red.300" fontSize="sm" mb={2}>Phone number is required.</Text>
                 )}
             </Box>
 

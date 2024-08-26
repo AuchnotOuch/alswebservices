@@ -16,7 +16,7 @@ const StepAddOnInfo = ({ onNext, onBack }) => {
         if (currentSlide < slides.length - 1) {
             setCurrentSlide(currentSlide + 1);
         } else {
-            onNext(); // Proceed to the next step
+            onNext();
         }
     };
 
@@ -24,7 +24,7 @@ const StepAddOnInfo = ({ onNext, onBack }) => {
         if (currentSlide > 0) {
             setCurrentSlide(currentSlide - 1);
         } else {
-            onBack(); // Go back to the previous step
+            onBack();
         }
     };
 
@@ -36,6 +36,7 @@ const StepAddOnInfo = ({ onNext, onBack }) => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 100 }}
                 transition={{ duration: 0.5 }}
+                aria-live="polite"
             >
                 <Heading textAlign="center" color="teal.300" size="lg" mb={4}>
                     Additional Features Overview
@@ -52,7 +53,7 @@ const StepAddOnInfo = ({ onNext, onBack }) => {
                     size="lg"
                     onClick={handlePreviousSlide}
                     isDisabled={currentSlide === 0}
-                    aria-label="Back"
+                    aria-label="Back to previous slide"
                 />
                 {currentSlide === slides.length - 1 ? (
                     <Button colorScheme="teal" size="lg" onClick={handleNextSlide}>
@@ -64,7 +65,7 @@ const StepAddOnInfo = ({ onNext, onBack }) => {
                         colorScheme="teal"
                         size="lg"
                         onClick={handleNextSlide}
-                        aria-label="Next"
+                        aria-label="Go to next slide"
                     />
                 )}
             </HStack>

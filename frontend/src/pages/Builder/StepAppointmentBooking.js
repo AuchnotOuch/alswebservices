@@ -27,13 +27,12 @@ const StepAppointmentBooking = ({
     const [selectedDate, setSelectedDate] = useState('');
     const [selectedTime, setSelectedTime] = useState('');
 
-    // Fetch available time slots from the backend
     useEffect(() => {
         const fetchAvailability = async () => {
             try {
                 const response = await fetch('http://localhost:5000/availability');
                 const data = await response.json();
-                setAvailableSlots(data);  // Save the fetched slots
+                setAvailableSlots(data);
             } catch (error) {
                 console.error('Error fetching availability:', error);
             }
@@ -55,8 +54,8 @@ const StepAppointmentBooking = ({
             hasMedia,
             addOns,
             totalPrice,
-            date: isMobile ? selectedDate : date, // Use selectedDate for mobile, date for desktop
-            time: isMobile ? selectedTime : date.toTimeString().split(' ')[0], // Use selectedTime for mobile
+            date: isMobile ? selectedDate : date,
+            time: isMobile ? selectedTime : date.toTimeString().split(' ')[0],
         };
 
         const response = await fetch('http://localhost:5000/book', {
@@ -75,32 +74,26 @@ const StepAppointmentBooking = ({
         }
     };
 
-    // Filter time based on available slots and your preferred hours (5am - 1pm MT)
     const filterAvailableTime = (time) => {
         const selectedTime = new Date(time);
 
-        // Convert to Mountain Time
         const mountainTime = new Date(selectedTime.toLocaleString('en-US', { timeZone: 'America/Denver' }));
         const hour = mountainTime.getHours();
 
-        // Check if the time falls within the 5am - 1pm MT window
-        const withinTimeRange = hour >= 5 && hour < 13; // hour < 13 to prevent selecting exactly 1:00pm
+        const withinTimeRange = hour >= 5 && hour < 13;
 
-        // Check if the selected time is one of the available slots from the backend
         const isAvailable = availableSlots.some(slot => {
             const slotStartTime = new Date(slot.startTime);
 
-            return selectedTime.getTime() === slotStartTime.getTime(); // Compare full date and time
+            return selectedTime.getTime() === slotStartTime.getTime();
         });
 
         return withinTimeRange && isAvailable;
     };
 
-    // Set the min and max dates based on available slots
-    const minDate = new Date();  // Today
-    const maxDate = addDays(minDate, 45);  // 45 days from today
+    const minDate = new Date();
+    const maxDate = addDays(minDate, 45);
 
-    // Available dates and times for mobile view dropdowns
     const availableDates = [...new Set(availableSlots.map(slot => format(new Date(slot.startTime), 'yyyy-MM-dd')))];
     const availableTimes = selectedDate ? availableSlots
         .filter(slot => format(new Date(slot.startTime), 'yyyy-MM-dd') === selectedDate)
@@ -108,7 +101,7 @@ const StepAppointmentBooking = ({
 
     return (
         <VStack spacing={8}>
-            <Heading size="lg" color="teal.400" textAlign="center">
+            <Heading as="h2" size="lg" color="teal.400" textAlign="center">
                 Book Your Appointment
             </Heading>
             <Text color="gray.300" textAlign="center">
@@ -117,14 +110,25 @@ const StepAppointmentBooking = ({
 
             {isMobile ? (
                 <VStack spacing={4}>
-                    <Select placeholder="Select a date" onChange={(e) => setSelectedDate(e.target.value)}>
+                    <Select
+                        placeholder="Select a date"
+                        onChange={(e) => setSelectedDate(e.target.value)}
+                        aria-label="Select a date for your appointment"
+                    >
                         {availableDates.map(date => (
                             <option key={date} value={date}>
                                 {format(new Date(date), 'MMMM dd, yyyy')}
                             </option>
                         ))}
                     </Select>
-                    <Select placeholder="Select a time" onChange={(e) => setSelectedTime(e.target.value)} isDisabled={!selectedDate}>
+
+                    <Select
+                        placeholder="Select a time"
+                        onChange={(e) => setSelectedTime(e.target.value)}
+                        isDisabled={!selectedDate}
+                        aria-disabled={!selectedDate}
+                        aria-label="Select a time for your appointment"
+                    >
                         {availableTimes.map(time => (
                             <option key={time} value={time}>
                                 {time}
@@ -151,6 +155,9 @@ const StepAppointmentBooking = ({
                         dateFormat="Pp"
                         inline
                         className="custom-datepicker"
+                        aria-label="Select appointment date and time"
+                        onCalendarOpen={() => document.getElementById('datepicker').focus()}
+                        onCalendarClose={() => document.getElementById('confirm-btn').focus()}
                     />
                 </Box>
             )}

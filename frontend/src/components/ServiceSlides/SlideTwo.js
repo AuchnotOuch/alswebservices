@@ -1,5 +1,5 @@
 import React from 'react';
-import { VStack, SimpleGrid, Icon, Box, Text, Heading } from "@chakra-ui/react";
+import { VStack, SimpleGrid, Icon, Text, Heading } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { FaCheckSquare } from "react-icons/fa";
 
@@ -23,20 +23,22 @@ const SlideTwo = () => {
             maxW="100%"
             px={4}
         >
-            <SimpleGrid columns={2} spacing={8} pt={4}>
-                {[...Array(4)].map((_, index) => (
-                    <motion.div
-                        key={index}
-                        custom={index}
-                        initial="hidden"
-                        animate="visible"
-                        variants={fadeInVariants}
-                    >
-                        <Icon as={FaCheckSquare} w={{ base: 8, md: 12 }} h={{ base: 8, md: 12 }} color="teal.500" />
-                    </motion.div>
-                ))}
-            </SimpleGrid>
-            <Heading size={{ base: "md", md: "lg" }} color="white" textAlign="center">
+            <span aria-label="Check boxes with checkmarks" role="img">
+                <SimpleGrid columns={2} spacing={8} pt={4}>
+                    {[...Array(4)].map((_, index) => (
+                        <motion.div
+                            key={index}
+                            custom={index}
+                            initial="hidden"
+                            animate="visible"
+                            variants={fadeInVariants}
+                        >
+                            <Icon as={FaCheckSquare} w={{ base: 8, md: 12 }} h={{ base: 8, md: 12 }} color="teal.500" aria-hidden="true" />
+                        </motion.div>
+                    ))}
+                </SimpleGrid>
+            </span>
+            <Heading as="h3" size={{ base: "md", md: "lg" }} color="white" textAlign="center">
                 Step 2: Choose Your Add-ons
             </Heading>
             <Text fontSize={{ base: "sm", md: "lg" }} color="white" textAlign="center">

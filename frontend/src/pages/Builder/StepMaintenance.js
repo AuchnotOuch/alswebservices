@@ -4,7 +4,7 @@ import { VStack, HStack, Heading, Text, Switch, Flex, Button } from "@chakra-ui/
 const StepMaintenance = ({ maintenanceOptIn, setMaintenanceOptIn, maintenanceCost, onNext, onBack }) => {
     return (
         <VStack spacing={6} alignItems="center">
-            <Heading textAlign="center" color="teal.300" size="lg">Monthly Maintenance Plan</Heading>
+            <Heading as="h2" textAlign="center" color="teal.300" size="lg">Monthly Maintenance Plan</Heading>
             <Text textAlign="left" fontSize="lg" color="white" fontStyle="italic" maxW="600px">
                 Opting into this plan will give you peace of mind knowing that any necessary updates, security patches, or minor adjustments will be handled regularly.
             </Text>
@@ -15,6 +15,7 @@ const StepMaintenance = ({ maintenanceOptIn, setMaintenanceOptIn, maintenanceCos
                     size="lg"
                     isChecked={maintenanceOptIn === 'yes'}
                     onChange={(e) => setMaintenanceOptIn(e.target.checked ? 'yes' : 'no')}
+                    aria-label={`Opt-in for Maintenance ($${maintenanceCost}/month)`}
                 />
             </Flex>
             <HStack spacing={4} mt={4}>

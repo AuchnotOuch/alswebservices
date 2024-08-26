@@ -1,20 +1,18 @@
 import React, { useState } from 'react';
 import { VStack, HStack, Button, Heading, Text, CheckboxGroup, Checkbox, SimpleGrid, Box, useBreakpointValue, IconButton, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import { InfoOutlineIcon } from "@chakra-ui/icons"; // Info icon for explanations
+import { InfoOutlineIcon } from "@chakra-ui/icons";
 
-const StepFour = ({ addOns, setAddOns, additionalFee, setAdditionalFee, totalPrice, setTotalPrice, addOnOptions, onNext, onBack, numPages, pricePerPage, hasMedia, mediaFee }) => {
-    const [flippedCategory, setFlippedCategory] = useState(null); // Track the flipped category
-    const [selectedAddOnInfo, setSelectedAddOnInfo] = useState(null); // Track the selected add-on for more info
-    const [isModalOpen, setIsModalOpen] = useState(false); // Control modal visibility
+const StepFour = ({ addOns, setAddOns, setAdditionalFee, setTotalPrice, addOnOptions, onNext, onBack, numPages, pricePerPage, hasMedia, mediaFee }) => {
+    const [flippedCategory, setFlippedCategory] = useState(null);
+    const [selectedAddOnInfo, setSelectedAddOnInfo] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
-    // Determine if we are on a mobile screen
     const isMobile = useBreakpointValue({ base: true, md: false });
 
     const handleAddOnsChange = (selectedLabels) => {
         setAddOns(selectedLabels);
 
-        // Calculate the price of selected add-ons
         const addOnPrices = selectedLabels.reduce((total, label) => {
             const addOnOption = addOnOptions.find(option => option.label === label);
             return total + (addOnOption ? addOnOption.price : 0);
@@ -22,19 +20,16 @@ const StepFour = ({ addOns, setAddOns, additionalFee, setAdditionalFee, totalPri
 
         const mediaFeeValue = hasMedia === "no" ? mediaFee : 0;
 
-        // Calculate the new total price, ensuring that pages and media fee are always included
         const newTotalPrice = (numPages * pricePerPage) + addOnPrices + mediaFeeValue;
 
-        // Set the additional fee and total price
         setAdditionalFee(addOnPrices);
         setTotalPrice(newTotalPrice > 0 ? newTotalPrice : (numPages * pricePerPage) + mediaFeeValue);
     };
 
-    // Function to open modal with more info
     const handleInfoClick = (addOnLabel) => {
         const selectedAddOn = addOnOptions.find(option => option.label === addOnLabel);
-        setSelectedAddOnInfo(selectedAddOn); // Set the selected add-on info
-        setIsModalOpen(true); // Open modal
+        setSelectedAddOnInfo(selectedAddOn);
+        setIsModalOpen(true);
     };
 
     const groupedAddOns = {
@@ -57,13 +52,25 @@ const StepFour = ({ addOns, setAddOns, additionalFee, setAdditionalFee, totalPri
             <Text fontSize="lg" color="white" textAlign="center">Select any additional features you'd like to include:</Text>
 
             {!isMobile ? (
-                // Desktop Layout: 3D Flip Cards
-                <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6} width="100%" height="100%" maxH="80vh" overflowY="auto">
+                <SimpleGrid
+                    columns={{ base: 1, md: 2 }}
+                    spacing={6}
+                    width="100%"
+                    height="100%"
+                    maxH="80vh"
+                    overflowY="auto"
+                    role="grid"
+                    aria-label="Add-ons categories"
+                >
                     {Object.entries(groupedAddOns).map(([category, options]) => (
                         <motion.div
                             key={category}
-                            style={{ perspective: 1000 }} // Create 3D perspective
-                            onClick={() => setFlippedCategory(flippedCategory === category ? null : category)} // Toggle flip on click
+                            style={{ perspective: 1000 }}
+                            onClick={() => setFlippedCategory(flippedCategory === category ? null : category)}
+                            role="region" // Describes the region for screen readers
+                            aria-labelledby={`${category}-heading`} // Matches to the heading
+                            tabIndex="0" // Ensures it is focusable by keyboard
+                            onKeyPress={(e) => e.key === 'Enter' && setFlippedCategory(flippedCategory === category ? null : category)} // Ensures keyboard users can flip cards
                         >
                             <motion.div
                                 variants={flipVariants}
@@ -93,9 +100,8 @@ const StepFour = ({ addOns, setAddOns, additionalFee, setAdditionalFee, totalPri
                                     boxShadow="0px 0px 20px rgba(0, 0, 0, 0.2)"
                                     style={{ backfaceVisibility: "hidden", zIndex: 2 }}
                                 >
-                                    <Heading size="md" textAlign="center">{category}</Heading>
+                                    <Heading size="md" id={`${category}-heading`} textAlign="center">{category}</Heading>
                                 </Box>
-
                                 {/* Back of the card */}
                                 <Box
                                     position="absolute"
@@ -120,11 +126,12 @@ const StepFour = ({ addOns, setAddOns, additionalFee, setAdditionalFee, totalPri
                                                 </Checkbox>
                                                 <IconButton
                                                     icon={<InfoOutlineIcon />}
+                                                    aria-label={`More information about ${option.label}`}
                                                     size="sm"
                                                     variant="ghost"
                                                     colorScheme="teal"
                                                     onClick={(e) => {
-                                                        e.stopPropagation(); // Prevent flip card event
+                                                        e.stopPropagation();
                                                         handleInfoClick(option.label);
                                                     }}
                                                 />
@@ -139,6 +146,10 @@ const StepFour = ({ addOns, setAddOns, additionalFee, setAdditionalFee, totalPri
                     <motion.div
                         style={{ perspective: 1000 }}
                         onClick={() => setFlippedCategory(flippedCategory === 'Unsure' ? null : 'Unsure')}
+                        role="region" // Marks it as a section
+                        aria-labelledby="unsure-heading" // Links to the heading for screen readers
+                        tabIndex="0" // Makes it focusable
+                        onKeyPress={(e) => e.key === 'Enter' && setFlippedCategory(flippedCategory === 'Unsure' ? null : 'Unsure')} // Keyboard support for flip
                     >
                         <motion.div
                             variants={flipVariants}
@@ -168,7 +179,7 @@ const StepFour = ({ addOns, setAddOns, additionalFee, setAdditionalFee, totalPri
                                 boxShadow="0px 0px 20px rgba(0, 0, 0, 0.2)"
                                 style={{ backfaceVisibility: 'hidden', zIndex: 2 }}
                             >
-                                <Heading size="md" textAlign="center">Unsure?</Heading>
+                                <Heading size="md" id="unsure-heading" textAlign="center">Unsure?</Heading>
                             </Box>
 
                             {/* Back of the Unsure card */}
@@ -198,7 +209,6 @@ const StepFour = ({ addOns, setAddOns, additionalFee, setAdditionalFee, totalPri
                     </motion.div>
                 </SimpleGrid>
             ) : (
-                // Mobile Layout: Simple Categories and Checkboxes
                 <VStack spacing={4} alignItems="flex-start" maxW="100%" overflowY="auto" maxH="80vh" p={4}>
                     {Object.entries(groupedAddOns).map(([category, options]) => (
                         <Box key={category} width="100%" p={4} bg="gray.700" borderRadius="md">
@@ -215,7 +225,7 @@ const StepFour = ({ addOns, setAddOns, additionalFee, setAdditionalFee, totalPri
                                             variant="ghost"
                                             colorScheme="teal"
                                             onClick={(e) => {
-                                                e.stopPropagation(); // Prevent unintended actions
+                                                e.stopPropagation();
                                                 handleInfoClick(option.label);
                                             }}
                                         />
@@ -224,7 +234,6 @@ const StepFour = ({ addOns, setAddOns, additionalFee, setAdditionalFee, totalPri
                             </CheckboxGroup>
                         </Box>
                     ))}
-                    {/* Unsure card for mobile */}
                     <Box width="100%" p={4} bg="gray.700" borderRadius="md" onClick={() => handleAddOnsChange([...addOns, 'Unsure'])}>
                         <Heading size="sm" color="white" textAlign="center">Unsure?</Heading>
                         <Text textAlign="center" fontSize="md" color="teal.200">
@@ -237,17 +246,26 @@ const StepFour = ({ addOns, setAddOns, additionalFee, setAdditionalFee, totalPri
                 </VStack>
             )}
 
-            {/* Modal for additional info */}
-            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} isCentered>
+
+            <Modal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                isCentered
+                motionPreset="slideInBottom"
+                closeOnOverlayClick={false}
+                role="dialog"
+                aria-labelledby="modal-heading"
+                aria-describedby="modal-description"
+            >
                 <ModalOverlay />
                 <ModalContent
-                    maxW={{ base: "90%", md: "500px" }}  // Adjusting the width for responsiveness
-                    mx="auto" // Ensures the modal is centered horizontally
-                    textAlign="center" // Centers text inside the modal
+                    maxW={{ base: "90%", md: "500px" }}
+                    mx="auto"
+                    textAlign="center"
                 >
-                    <ModalHeader>{selectedAddOnInfo?.label}</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
+                    <ModalHeader id="modal-heading">{selectedAddOnInfo?.label}</ModalHeader>
+                    <ModalCloseButton aria-label="Close Modal" />
+                    <ModalBody id="modal-description">
                         <Text>
                             {selectedAddOnInfo?.description || "This is a description of the selected add-on, explaining its purpose and benefits in simple terms."}
                         </Text>

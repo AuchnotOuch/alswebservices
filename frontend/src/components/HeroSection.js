@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Heading, Text, VStack, IconButton, Image } from "@chakra-ui/react";
-import { FaArrowDown } from "react-icons/fa"; // Import Font Awesome icon
-import { Link as ScrollLink } from "react-scroll"; // Import for smooth scrolling
+import { FaArrowDown } from "react-icons/fa";
+import { Link as ScrollLink } from "react-scroll";
 
 const HeroSection = () => {
     return (
@@ -23,14 +23,13 @@ const HeroSection = () => {
                 py={{ base: 8, md: 0 }}
             >
                 <VStack spacing={4} p={8} borderRadius="lg" zIndex={1}>
-                    <Image w="300px" src="/images/alslogo.png" alt="als logo" />
-                    <Heading size="2xl" color="white">Welcome to Al's Web Services</Heading>
+                    <Image w="300px" src="/images/alslogo.png" alt="Al's Web Services logo" />
+                    <Heading as="h1" size="2xl" color="white">Welcome to Al's Web Services</Heading>
                     <Text fontSize="lg" color="white">Professional websites that boost your online presence.</Text>
 
-                    {/* Scroll down arrow to Guarantees */}
-                    <ScrollLink to="guarantees" smooth={true} duration={500} offset={-100}>
+                    <ScrollLink to="guarantees" smooth={true} duration={500} offset={-100} tabIndex="0">
                         <IconButton
-                            aria-label="Scroll down"
+                            aria-label="Scroll down to Guarantees section"
                             icon={<FaArrowDown />}
                             size="lg"
                             variant="outline"
