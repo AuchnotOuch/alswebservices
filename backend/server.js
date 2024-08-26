@@ -4,20 +4,26 @@ import nodemailer from 'nodemailer';
 import { google } from 'googleapis';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import mongoose from 'mongoose'; // Import mongoose for MongoDB
-import AvailableSlot from './models/AvailableSlot.js'; // Import the model
+import mongoose from 'mongoose';
+import AvailableSlot from './models/AvailableSlot.js';
+import path from 'path'
+import { fileURLToPath } from 'url';
+
 dotenv.config();
 
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
 const app = express();
+
+app.use(express.static(path.join(__dirname, '../frontend/build')))
 app.use(cors());
 app.use(bodyParser.json());
 
-// MongoDB connection
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('MongoDB connected'))
     .catch((err) => console.error('MongoDB connection error:', err));
 
-// OAuth2 Setup
 const oAuth2Client = new google.auth.OAuth2(
     process.env.CLIENT_ID,
     process.env.CLIENT_SECRET,
@@ -28,7 +34,6 @@ oAuth2Client.setCredentials({
     refresh_token: process.env.REFRESH_TOKEN,
 });
 
-// Nodemailer configuration with OAuth2
 const getAccessToken = async () => {
     try {
         const accessToken = await oAuth2Client.getAccessToken();
@@ -55,8 +60,7 @@ const createTransporter = async () => {
     });
 };
 
-// Route to handle booking requests and send emails
-// Route to handle booking requests and send emails
+
 app.post('/book', async (req, res) => {
     const {
         name,
@@ -75,11 +79,11 @@ app.post('/book', async (req, res) => {
     } = req.body;
 
     try {
-        const selectedDateTime = new Date(date); // Combine date and time
+        const selectedDateTime = new Date(date);
         selectedDateTime.setHours(parseInt(time.split(':')[0]));
         selectedDateTime.setMinutes(parseInt(time.split(':')[1]));
 
-        // Find the requested time slot and mark it as booked
+
         const slot = await AvailableSlot.findOne({ startTime: selectedDateTime, isBooked: false });
 
         if (!slot) {
@@ -89,7 +93,7 @@ app.post('/book', async (req, res) => {
         slot.isBooked = true;
         await slot.save();
 
-        // Send email confirmation
+
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: process.env.RECIPIENT_EMAIL,
@@ -119,12 +123,9 @@ app.post('/book', async (req, res) => {
     }
 });
 
-// Route to fetch available time slots
 app.get('/availability', async (req, res) => {
     try {
-        // Fetch available slots from the AvailableSlot model, filtering out booked slots
         const availableSlots = await AvailableSlot.find({ isBooked: false });
-        console.log(availableSlots); // For debugging purposes
         res.json(availableSlots);
     } catch (error) {
         console.error('Error fetching availability:', error);
@@ -132,7 +133,6 @@ app.get('/availability', async (req, res) => {
     }
 });
 
-// Route to initialize available time slots (run this once to populate the database)
 app.post('/initialize-slots', async (req, res) => {
     const { date, startTime, endTime } = req.body;
 
@@ -145,6 +145,10 @@ app.post('/initialize-slots', async (req, res) => {
         res.status(500).json({ error: 'Error initializing time slots' });
     }
 });
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname + '../frontend/build/index.html'))
+})
 
 app.listen(process.env.PORT, () => {
     console.log(`Server running on port ${process.env.PORT}`);
