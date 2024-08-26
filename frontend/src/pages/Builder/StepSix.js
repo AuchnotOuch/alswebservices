@@ -3,9 +3,11 @@ import { VStack, Heading, Text, Input, Button, HStack, Box } from "@chakra-ui/re
 
 const StepSix = ({ name, setName, email, setEmail, phone, setPhone, companyName, setCompanyName, onNext, onBack }) => {
     return (
-        <VStack spacing={6}>
-            <Box width="100%">
-                <Text fontSize="lg" color="white">Name:</Text>
+        <VStack spacing={1} alignItems="center" textAlign="center">
+            <Heading color="teal.300" size="lg">Contact Information</Heading>
+
+            <Box width="100%" maxW="500px">
+                <Text fontSize="lg" color="white" mb={2}>Name:</Text>
                 <Input
                     required
                     placeholder="Your Name"
@@ -15,14 +17,15 @@ const StepSix = ({ name, setName, email, setEmail, phone, setPhone, companyName,
                     borderColor="teal"
                     errorBorderColor="red.300"
                     color="white"
+                    mb={2}
                 />
                 {!name && (
-                    <Text color="red.300" fontSize="sm">Name is required.</Text>
+                    <Text color="red.300" fontSize="sm" mb={2}>Name is required.</Text>
                 )}
             </Box>
 
-            <Box width="100%">
-                <Text fontSize="lg" color="white">Email:</Text>
+            <Box width="100%" maxW="500px">
+                <Text fontSize="lg" color="white" mb={2}>Email:</Text>
                 <Input
                     required
                     type="email"
@@ -33,17 +36,18 @@ const StepSix = ({ name, setName, email, setEmail, phone, setPhone, companyName,
                     borderColor="teal"
                     errorBorderColor="red.300"
                     color="white"
+                    mb={2}
                 />
                 {!email && (
-                    <Text color="red.300" fontSize="sm">Email is required.</Text>
+                    <Text color="red.300" fontSize="sm" mb={2}>Email is required.</Text>
                 )}
                 {email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && (
-                    <Text color="red.300" fontSize="sm">Please enter a valid email address.</Text>
+                    <Text color="red.300" fontSize="sm" mb={2}>Please enter a valid email address.</Text>
                 )}
             </Box>
 
-            <Box width="100%">
-                <Text fontSize="lg" color="white">Phone:</Text>
+            <Box width="100%" maxW="500px">
+                <Text fontSize="lg" color="white" mb={2}>Phone:</Text>
                 <Input
                     required
                     type="tel"
@@ -54,26 +58,36 @@ const StepSix = ({ name, setName, email, setEmail, phone, setPhone, companyName,
                     borderColor="teal"
                     errorBorderColor="red.300"
                     color="white"
+                    mb={2}
                 />
                 {!phone && (
-                    <Text color="red.300" fontSize="sm">Phone number is required.</Text>
+                    <Text color="red.300" fontSize="sm" mb={2}>Phone number is required.</Text>
                 )}
             </Box>
 
-            <Box width="100%">
-                <Text fontSize="lg" color="white">Company Name (optional):</Text>
+            <Box width="100%" maxW="500px">
+                <Text fontSize="lg" color="white" mb={2}>Company Name (optional):</Text>
                 <Input
                     placeholder="Your Company Name"
                     value={companyName}
                     onChange={(e) => setCompanyName(e.target.value)}
                     borderColor="teal"
                     color="white"
+                    mb={2}
                 />
             </Box>
 
             <HStack mt={6} spacing={4}>
                 <Button colorScheme="teal" variant="outline" size="lg" onClick={onBack}>Back</Button>
-                <Button colorScheme="teal" variant="outline" size="lg" onClick={onNext} isDisabled={!name || !email || !phone}>Next</Button>
+                <Button
+                    colorScheme="teal"
+                    variant="outline"
+                    size="lg"
+                    onClick={onNext}
+                    isDisabled={!name || !email || !phone}
+                >
+                    Next
+                </Button>
             </HStack>
         </VStack>
     );

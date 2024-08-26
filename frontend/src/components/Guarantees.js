@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Box, Text, VStack, HStack } from "@chakra-ui/react";
+import { Box, Text, VStack, HStack, IconButton } from "@chakra-ui/react";
 import { motion } from 'framer-motion';
+import { Link as ScrollLink } from "react-scroll";
+import { FaArrowDown } from "react-icons/fa";
 
 const Guarantees = () => {
     const [isVisible, setIsVisible] = useState(false);
@@ -33,9 +35,8 @@ const Guarantees = () => {
         { icon: "fa-screwdriver-wrench", text: "Ongoing support and maintenance" },
     ];
 
-    // Define slide-in variants for left and right
     const slideInVariants = (index) => ({
-        hidden: { opacity: 0, x: index % 2 === 0 ? -100 : 100 }, // Slide from left if index is even, right if odd
+        hidden: { opacity: 0, x: index % 2 === 0 ? -100 : 100 },
         visible: {
             opacity: 1,
             x: 0,
@@ -44,30 +45,44 @@ const Guarantees = () => {
     });
 
     return (
-        <Box id="guarantees" mb={2} ref={guaranteeRef} py={8} px={4} bg="transparent">
-            <VStack spacing={8} maxW="500px" mx="auto" alignItems="flex-start" bg="transparent">
+        <Box id="guarantees" ref={guaranteeRef} py={0} px={4} bg="transparent">
+            <VStack spacing={8} maxW="500px" mx="auto" alignItems="center" bg="transparent">
                 {guarantees.map((guarantee, index) => (
                     <motion.div
                         key={index}
                         initial="hidden"
                         animate={isVisible ? "visible" : "hidden"}
                         variants={slideInVariants(index)}
-                        style={{ width: '100%' }}  // Ensure full width for alignment
+                        style={{ width: '100%' }}
                     >
-                        <HStack spacing={4} align="center">
+                        <VStack
+                            spacing={4}
+                            align="center"
+                            direction={{ base: "column", md: "row" }} // Stack vertically on smaller screens
+                        >
                             <Box
                                 as="i"
                                 className={`fa-solid ${guarantee.icon}`}
-                                fontSize="5xl"
+                                fontSize={{ base: "3xl", md: "5xl" }}
                                 color="rgb(236, 97, 71)"
-                                minWidth="40px"
                             />
-                            <Text fontSize="xl" color="white">
+                            <Text fontSize={{ base: "md", md: "xl" }} color="white">
                                 {guarantee.text}
                             </Text>
-                        </HStack>
+                        </VStack>
                     </motion.div>
                 ))}
+                <ScrollLink to="service-highlight" smooth={true} duration={500} offset={-100}>
+                    <IconButton
+                        aria-label="Scroll down"
+                        icon={<FaArrowDown />}
+                        size="lg"
+                        variant="outline"
+                        colorScheme="teal"
+                        mt={1}
+                        _hover={{ bg: "rgba(255, 255, 255, 0.2)" }}
+                    />
+                </ScrollLink>
             </VStack>
         </Box>
     );

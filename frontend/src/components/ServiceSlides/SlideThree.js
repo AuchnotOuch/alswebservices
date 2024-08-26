@@ -1,62 +1,46 @@
-import React, { useEffect } from 'react';
-import { VStack, Heading, Text } from "@chakra-ui/react";
-import { motion, useAnimation } from "framer-motion";
-import { Icon } from "@chakra-ui/icons";
-import { FaCalendarAlt, FaPen } from "react-icons/fa";
+import React from 'react';
+import { VStack, Icon, Box, Text, Heading } from "@chakra-ui/react";
+import { motion } from "framer-motion";
+import { FaPen, FaCalendarAlt } from "react-icons/fa"; // Pen and Calendar Icons
 
 const SlideThree = () => {
-    const penControls = useAnimation();
-
-    useEffect(() => {
-        // Start the pen animation after the calendar icon fades in
-        const sequence = async () => {
-            await penControls.start({ opacity: 1 });
-            await penControls.start({
-                x: [0, 15, 30, 15, 0, -15, -30, -15, 0],  // Creating a circular path in place
-                y: [0, 15, 0, -15, -30, -15, 0, 15, 0],
-                transition: {
-                    duration: 2,  // Adjust the duration for a smooth circle motion
-                    ease: "linear",
-                },
-            });
-        };
-        sequence();
-    }, [penControls]);
+    const circleMotion = {
+        initial: { x: 0, y: 0 },
+        animate: {
+            x: ["0%", "15%", "30%", "15%", "0%"], // Moves in a circle, but with percentages
+            y: ["0%", "50%", "0%", "50%", "0%"],
+        },
+        transition: {
+            repeat: Infinity,
+            duration: 5,
+            ease: "easeInOut",
+        },
+    };
 
     return (
-        <VStack spacing={6} alignItems="center" position="relative">
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 1 }}
-                style={{ zIndex: 1 }}
-            >
-                <Icon as={FaCalendarAlt} w={200} h={200} color="teal.400" />
-            </motion.div>
+        <VStack spacing={4} align="center" maxW="100%" px={4}>
+            <Box position="relative" width={{ base: "100px", md: "200px" }} height={{ base: "100px", md: "200px" }}>
+                {/* Calendar Icon */}
+                <Icon as={FaCalendarAlt} w="100%" h="100%" color="teal.500" />
 
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={penControls}
-                style={{
-                    position: "absolute",
-                    top: "25%",   // Adjust to keep pen within calendar bounds
-                    zIndex: 2,
-                }}
-            >
-                <Icon as={FaPen} boxSize={6} color="white" />
-            </motion.div>
+                {/* Pen Icon */}
+                <motion.div
+                    initial="initial"
+                    animate="animate"
+                    transition="transition"
+                    style={{ position: "absolute", top: '30%', left: '20%' }}
+                    {...circleMotion}
+                >
+                    <Icon as={FaPen} w={{ base: 6, md: 10 }} h={{ base: 6, md: 10 }} color="teal.300" />
+                </motion.div>
+            </Box>
 
-            <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1 }}
-            >
-                <Heading size="lg" color="white">Step 3: Book an Appointment</Heading>
-                <Text fontSize="lg" color="white" mt={4}>
-                    Schedule a consultation with us to discuss your project in detail and solidify the game plan.
-                    No upfront payments required until after the consultation!
-                </Text>
-            </motion.div>
+            <Heading size={{ base: "md", md: "lg" }} color="white" textAlign="center">
+                Step 3: Book an Appointment
+            </Heading>
+            <Text fontSize={{ base: "sm", md: "lg" }} color="white" textAlign="center">
+                Schedule a consultation to finalize your project. No upfront payment required until after the consultation!
+            </Text>
         </VStack>
     );
 };

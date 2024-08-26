@@ -1,22 +1,38 @@
 import React from 'react';
 import { VStack, Heading, Text, Box, Flex, Button, HStack } from "@chakra-ui/react";
 
-const StepFive = ({ totalPrice, numPages, pricePerPage, additionalFee, addOns, addOnOptions, hasMedia, mediaFee, maintenanceCost, onNext, onBack }) => {
+const StepFive = ({ totalPrice, numPages, pricePerPage, additionalFee, addOns, addOnOptions, hasMedia, mediaFee, maintenanceCost, maintenanceOptIn, onNext, onBack }) => {
     return (
-        <VStack spacing={6} height="80vh" justify="center" alignItems="center">
-            <Heading size="lg" color="white">Here's a breakdown of the costs:</Heading>
-            <Text fontStyle="italic" fontSize="sm" color="teal.200" textAlign="center">
-                Please note, no charges will be made at this time. Payment will only be required after our initial appointment.
+        <VStack spacing={6} height="auto" justify="center" alignItems="center">
+            <Heading color="teal.300" size="lg">Cost Breakdown</Heading>
+            <Text fontSize="lg" color="white" textAlign="left" maxW="600px">
+                Here's a breakdown of the estimated costs based on the information you've provided so far. Keep in mind, no payment is required at this stage. The total price shown here is just a rough estimate and may be adjusted after we finalize the project details during our consultation.
+            </Text>
+            <Text fontSize="lg" color="white" textAlign="left" fontStyle="italic" maxW="600px">
+                This breakdown includes the cost for your site's pages, any selected add-ons, media fees, and—if opted in—your monthly maintenance plan.
             </Text>
 
-            {/* Restrict the height of the breakdown container */}
-            <Box display="flex" flexDir="column" justifyContent="space-between" width="400px" height="auto" maxH="40vh" overflowY="auto" p={4} bg="gray.900" borderRadius="lg" boxShadow="0px 0px 20px rgba(0, 0, 0, 0.2)">
+            {/* Cost Breakdown Box */}
+            <Box
+                display="flex"
+                flexDir="column"
+                justifyContent="space-between"
+                width="400px"
+                height="auto"
+                maxH="40vh"
+                overflowY="auto"
+                p={4}
+                bg="gray.900"
+                borderRadius="lg"
+                boxShadow="0px 0px 20px rgba(0, 0, 0, 0.2)"
+            >
+                {/* Pages Cost */}
                 <Flex justifyContent="space-between" width="100%">
                     <Text fontSize="md" color="white">Pages:</Text>
                     <Text fontSize="md" color="white">{numPages} x ${pricePerPage} = ${numPages * pricePerPage}</Text>
                 </Flex>
 
-                {/* Display Stock Media Fee */}
+                {/* Stock Media Fee */}
                 {hasMedia === "no" && (
                     <Flex justifyContent="space-between" width="100%">
                         <Text fontSize="md" color="white">Stock Media Fee:</Text>
@@ -24,7 +40,7 @@ const StepFive = ({ totalPrice, numPages, pricePerPage, additionalFee, addOns, a
                     </Flex>
                 )}
 
-                {/* Display Add-ons */}
+                {/* Add-ons Cost */}
                 {addOns && addOns.length > 0 && (
                     <>
                         {addOns.map((addOnLabel, index) => {
@@ -40,15 +56,17 @@ const StepFive = ({ totalPrice, numPages, pricePerPage, additionalFee, addOns, a
                         })}
                     </>
                 )}
-                <hr></hr>
-                {/* Display Total Price */}
+
+                {/* Total Price */}
+                <hr />
                 <Flex justifyContent="space-between" width="100%">
-                    <Text fontSize="lg" color="rgb(236, 97, 71)" fontWeight="bold">Total:</Text>
+                    <Text fontSize="lg" color="rgb(236, 97, 71)" fontWeight="bold"> Estimated Total:</Text>
                     <Text fontSize="lg" color="rgb(236, 97, 71)" fontWeight="bold">${totalPrice}</Text>
                 </Flex>
-                <hr></hr>
-                {/* Display Monthly Maintenance Charge */}
-                {maintenanceCost > 0 && (
+                <hr />
+
+                {/* Monthly Maintenance Charge */}
+                {maintenanceOptIn === 'yes' && (
                     <Flex justifyContent="space-between" width="100%" mt={4}>
                         <Text fontSize="lg" color="gold" fontWeight="bold">Monthly Maintenance Charge:</Text>
                         <Text fontSize="lg" color="gold" fontWeight="bold">${maintenanceCost}/month</Text>
@@ -56,6 +74,7 @@ const StepFive = ({ totalPrice, numPages, pricePerPage, additionalFee, addOns, a
                 )}
             </Box>
 
+            {/* Navigation Buttons */}
             <HStack spacing={4} mt={4}>
                 <Button colorScheme="teal" variant="outline" size="lg" onClick={onBack}>Back</Button>
                 <Button colorScheme="teal" variant="outline" size="lg" onClick={onNext}>Next</Button>

@@ -6,17 +6,16 @@ import Guarantees from '../components/Guarantees';
 import { startBackgroundAnimation } from '../assets/backgroundAnimation'; // Import the animation function
 
 const Landing = () => {
-    useEffect(() => {
-        // Start the background animation when the component mounts
-        startBackgroundAnimation();
-    }, []);
 
     return (
         <>
-            <canvas id="canvas" style={{ position: 'fixed', top: 0, left: 0, zIndex: -1 }}></canvas>
-            <HeroSection />
-            <Guarantees />
-            <ServiceHighlight />
+            <Box>
+                <HeroSection />
+                <Box height="500px" /> {/* Spacer */}
+                <Guarantees />
+                <Box height="500px" /> {/* Spacer */}
+                <ServiceHighlight />
+            </Box>
         </>
     );
 };

@@ -1,0 +1,151 @@
+import dotenv from 'dotenv';
+import express from 'express';
+import nodemailer from 'nodemailer';
+import { google } from 'googleapis';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import mongoose from 'mongoose'; // Import mongoose for MongoDB
+import AvailableSlot from './models/AvailableSlot.js'; // Import the model
+dotenv.config();
+
+const app = express();
+app.use(cors());
+app.use(bodyParser.json());
+
+// MongoDB connection
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log('MongoDB connected'))
+    .catch((err) => console.error('MongoDB connection error:', err));
+
+// OAuth2 Setup
+const oAuth2Client = new google.auth.OAuth2(
+    process.env.CLIENT_ID,
+    process.env.CLIENT_SECRET,
+    process.env.REDIRECT_URI
+);
+
+oAuth2Client.setCredentials({
+    refresh_token: process.env.REFRESH_TOKEN,
+});
+
+// Nodemailer configuration with OAuth2
+const getAccessToken = async () => {
+    try {
+        const accessToken = await oAuth2Client.getAccessToken();
+        return accessToken.token;
+    } catch (error) {
+        console.error('Error getting access token:', error);
+        throw error;
+    }
+};
+
+const createTransporter = async () => {
+    const accessToken = await getAccessToken();
+
+    return nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            type: 'OAuth2',
+            user: process.env.EMAIL_USER,
+            clientId: process.env.CLIENT_ID,
+            clientSecret: process.env.CLIENT_SECRET,
+            refreshToken: process.env.REFRESH_TOKEN,
+            accessToken: accessToken,
+        },
+    });
+};
+
+// Route to handle booking requests and send emails
+// Route to handle booking requests and send emails
+app.post('/book', async (req, res) => {
+    const {
+        name,
+        email,
+        phone,
+        companyName,
+        specialRequests,
+        numPages,
+        maintenanceOptIn,
+        maintenanceCost,
+        hasMedia,
+        addOns,
+        totalPrice,
+        date,
+        time,
+    } = req.body;
+
+    try {
+        const selectedDateTime = new Date(date); // Combine date and time
+        selectedDateTime.setHours(parseInt(time.split(':')[0]));
+        selectedDateTime.setMinutes(parseInt(time.split(':')[1]));
+
+        // Find the requested time slot and mark it as booked
+        const slot = await AvailableSlot.findOne({ startTime: selectedDateTime, isBooked: false });
+
+        if (!slot) {
+            return res.status(400).json({ error: 'Time slot is no longer available' });
+        }
+
+        slot.isBooked = true;
+        await slot.save();
+
+        // Send email confirmation
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: process.env.RECIPIENT_EMAIL,
+            subject: `New Booking: ${name}`,
+            text: `
+                You have a new booking from ${name} (${email}, ${phone}).
+                Company: ${companyName || 'N/A'}
+                Special Requests: ${specialRequests}
+                Number of Pages: ${numPages}
+                Maintenance Opt-in: ${maintenanceOptIn ? 'Yes' : 'No'}
+                Maintenance Cost: $${maintenanceCost}
+                Media Provided: ${hasMedia === 'yes' ? 'Yes' : 'No'}
+                Add Ons: ${addOns}
+                Total Price: ${totalPrice}
+                Appointment Date: ${date}
+                Appointment Time: ${time}
+            `,
+        };
+
+        const transporter = await createTransporter();
+        await transporter.sendMail(mailOptions);
+
+        res.status(200).json({ message: 'Appointment booked successfully!' });
+    } catch (error) {
+        console.error('Error booking appointment:', error);
+        res.status(500).json({ error: 'Error booking appointment' });
+    }
+});
+
+// Route to fetch available time slots
+app.get('/availability', async (req, res) => {
+    try {
+        // Fetch available slots from the AvailableSlot model, filtering out booked slots
+        const availableSlots = await AvailableSlot.find({ isBooked: false });
+        console.log(availableSlots); // For debugging purposes
+        res.json(availableSlots);
+    } catch (error) {
+        console.error('Error fetching availability:', error);
+        res.status(500).json({ error: 'Error fetching availability' });
+    }
+});
+
+// Route to initialize available time slots (run this once to populate the database)
+app.post('/initialize-slots', async (req, res) => {
+    const { date, startTime, endTime } = req.body;
+
+    try {
+        const newSlot = new Booking({ date, startTime, endTime });
+        await newSlot.save();
+        res.status(201).json({ message: 'Time slot initialized' });
+    } catch (error) {
+        console.error('Error initializing time slots:', error);
+        res.status(500).json({ error: 'Error initializing time slots' });
+    }
+});
+
+app.listen(process.env.PORT, () => {
+    console.log(`Server running on port ${process.env.PORT}`);
+});

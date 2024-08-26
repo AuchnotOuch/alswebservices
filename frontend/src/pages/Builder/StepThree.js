@@ -4,12 +4,14 @@ import { VStack, Heading, Text, RadioGroup, Radio, Stack, Button, HStack } from 
 const StepThree = ({ hasMedia, setHasMedia, mediaFee, onNext, onBack }) => {
     return (
         <VStack spacing={6}>
-            <Heading size="2xl" color="white">Do You Have Your Own Media?</Heading>
-            <Text color="white">Media could include photos, videos, logos, or graphics.</Text>
+            <Heading color="teal.300" size="lg" textAlign="center">Do You Have Your Own Media?</Heading>
+            <Text fontSize="lg" color="white" textAlign="left">
+                Media includes photos, videos, logos, or graphics for your website. If you have your own, we’ll integrate them. If not, I can help with stock images or custom graphics, though a media fee applies.
+            </Text>
             <RadioGroup value={hasMedia} onChange={setHasMedia} colorScheme="teal">
                 <Stack direction="row" spacing={4}>
                     <Radio value="yes"><Text color="teal.200">Yes</Text></Radio>
-                    <Radio value="no"><Text color="teal.200">No (+${mediaFee})</Text></Radio>
+                    <Radio value="no"><Text color="teal.200">No</Text></Radio>
                     <Radio value="unsure"><Text color="teal.200">Unsure</Text></Radio>
                 </Stack>
             </RadioGroup>

@@ -3,12 +3,12 @@ import { VStack, HStack, Heading, Text, Switch, Flex, Button } from "@chakra-ui/
 
 const StepMaintenance = ({ maintenanceOptIn, setMaintenanceOptIn, maintenanceCost, onNext, onBack }) => {
     return (
-        <VStack spacing={6}>
-            <Heading size="lg" color="white">Monthly Maintenance</Heading>
-            <Text fontStyle="italic" fontSize="sm" color="teal.200" textAlign="center">
-                We offer lifetime monthly maintenance for your website. 1st month is free!
+        <VStack spacing={6} alignItems="center">
+            <Heading textAlign="center" color="teal.300" size="lg">Monthly Maintenance Plan</Heading>
+            <Text textAlign="left" fontSize="lg" color="white" fontStyle="italic" maxW="600px">
+                Opting into this plan will give you peace of mind knowing that any necessary updates, security patches, or minor adjustments will be handled regularly.
             </Text>
-            <Flex justifyContent="space-between" width="100%">
+            <Flex justifyContent="space-between" width="100%" alignItems="center" maxW="600px">
                 <Text fontSize="lg" color="white">Opt-in for Maintenance (${maintenanceCost}/month):</Text>
                 <Switch
                     colorScheme="teal"
