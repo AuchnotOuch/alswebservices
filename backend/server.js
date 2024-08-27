@@ -90,20 +90,11 @@ app.post('/book', async (req, res) => {
 
         console.log('Combined UTC Date and Time:', selectedDateTime);
 
-        // Create a time range with a buffer of 1 minute before and after
-        const startOfSlot = new Date(selectedDateTime);
-        const endOfSlot = new Date(selectedDateTime);
-        startOfSlot.setMinutes(startOfSlot.getMinutes() - 1); // 1 minute before the selected time
-        endOfSlot.setMinutes(endOfSlot.getMinutes() + 1);     // 1 minute after the selected time
+        // Query for the slot using the exact match for startTime
+        console.log('Querying AvailableSlot with selectedDateTime:', selectedDateTime);
 
-        console.log('Querying AvailableSlot with startOfSlot:', startOfSlot, 'and endOfSlot:', endOfSlot);
-
-        // Find the available slot in the database by using a range query
         const slot = await AvailableSlot.findOne({
-            startTime: {
-                $gte: startOfSlot,
-                $lte: endOfSlot,
-            },
+            startTime: selectedDateTime,
             isBooked: false,
         });
 
