@@ -81,21 +81,27 @@ app.post('/book', async (req, res) => {
     } = req.body;
 
     try {
-        const selectedDateTime = new Date(date);
-        selectedDateTime.setHours(parseInt(time.split(':')[0]));
-        selectedDateTime.setMinutes(parseInt(time.split(':')[1]));
+        // Convert the date to a UTC date object
+        let selectedDateTime = new Date(date);
 
+        // Extract time parts and apply them to the UTC date
+        const timeParts = time.split(':');
+        selectedDateTime.setUTCHours(parseInt(timeParts[0]), parseInt(timeParts[1]), 0, 0); // Set hours and minutes in UTC
 
+        console.log('Combined UTC Date and Time:', selectedDateTime);
+
+        // Find the available slot in the database
         const slot = await AvailableSlot.findOne({ startTime: selectedDateTime, isBooked: false });
 
         if (!slot) {
             return res.status(400).json({ error: 'Time slot is no longer available' });
         }
 
+        // Mark the slot as booked
         slot.isBooked = true;
         await slot.save();
 
-
+        // Send the booking confirmation email
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: process.env.RECIPIENT_EMAIL,
@@ -110,14 +116,14 @@ app.post('/book', async (req, res) => {
                 Media Provided: ${hasMedia === 'yes' ? 'Yes' : 'No'}
                 Add Ons: ${addOns}
                 Total Price: ${totalPrice}
-                Appointment Date: ${date}
-                Appointment Time: ${time}
+                Appointment Date: ${selectedDateTime.toISOString()} (UTC)
             `,
         };
 
         const transporter = await createTransporter();
         await transporter.sendMail(mailOptions);
 
+        // Send a success response to the client
         res.status(200).json({ message: 'Appointment booked successfully!' });
     } catch (error) {
         console.error('Error booking appointment:', error);
