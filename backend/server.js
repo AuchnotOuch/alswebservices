@@ -90,10 +90,11 @@ app.post('/book', async (req, res) => {
 
         console.log('Combined UTC Date and Time:', selectedDateTime);
 
-        // Create a start and end range to ignore milliseconds for the date comparison
+        // Create a time range with a buffer of 1 minute before and after
         const startOfSlot = new Date(selectedDateTime);
         const endOfSlot = new Date(selectedDateTime);
-        endOfSlot.setSeconds(59, 999); // Set the last second of the minute
+        startOfSlot.setMinutes(startOfSlot.getMinutes() - 1); // 1 minute before the selected time
+        endOfSlot.setMinutes(endOfSlot.getMinutes() + 1);     // 1 minute after the selected time
 
         console.log('Querying AvailableSlot with startOfSlot:', startOfSlot, 'and endOfSlot:', endOfSlot);
 
