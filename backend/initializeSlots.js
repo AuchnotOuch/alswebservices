@@ -19,20 +19,20 @@ const connectDB = async () => {
 // Create slots for a range of dates and times
 const createSlots = async () => {
     const startDate = DateTime.now().setZone('America/Denver').startOf('day').plus({ days: 1 });
-    const endDate = startDate.plus({ days: 45 }); // Create slots for the next year
+    const endDate = startDate.plus({ days: 45 }); // Create slots for the next 45 days
 
     const timeSlots = [];
 
     for (let date = startDate; date < endDate; date = date.plus({ days: 1 })) {
-        for (let hour = 5; hour <= 12; hour++) { // From 5am to 1pm MT
+        for (let hour = 5; hour <= 12; hour++) { // From 5am to 12pm MT
             const startTime = date.set({ hour, minute: 0 }).toJSDate();
-            const endTime = date.set({ hour, minute: 30 }).toJSDate(); // 30-minute slots
+            const endTime = date.set({ hour: hour + 1, minute: 0 }).toJSDate(); // 1-hour slots
             timeSlots.push({ startTime, endTime });
         }
     }
 
     try {
-        await AvailableSlot.insertMany(timeSlots); // Use the imported model
+        await AvailableSlot.insertMany(timeSlots); // Insert time slots into the database
         console.log('Time slots initialized');
     } catch (error) {
         console.error('Error initializing slots:', error);
