@@ -3,7 +3,7 @@ import { Box, Heading, Select, Text, Button, VStack } from "@chakra-ui/react";
 
 const StepOne = ({ numPages, setNumPages, onNext }) => {
     return (
-        <VStack spacing={6}>
+        <VStack minWidth="350px" spacing={6}>
             <Heading color="teal.300" size="lg" textAlign="center" id="step1-heading">
                 How Many Pages Will Your Website Need?
             </Heading>

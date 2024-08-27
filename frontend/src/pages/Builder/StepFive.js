@@ -3,13 +3,10 @@ import { VStack, Heading, Text, Box, Flex, Button, HStack } from "@chakra-ui/rea
 
 const StepFive = ({ totalPrice, numPages, pricePerPage, additionalFee, addOns, addOnOptions, hasMedia, mediaFee, maintenanceCost, maintenanceOptIn, onNext, onBack }) => {
     return (
-        <VStack spacing={6} height="auto" justify="center" alignItems="center">
+        <VStack minWidth="350px" spacing={6} height="auto" justify="center" alignItems="center">
             <Heading as="h2" color="teal.300" size="lg" id="cost-breakdown-heading">Cost Breakdown</Heading>
-            <Text fontSize="lg" color="white" textAlign="left" maxW="600px">
-                Here's a breakdown of the estimated costs based on the information you've provided so far. Keep in mind, no payment is required at this stage. The total price shown here is just a rough estimate and may be adjusted after we finalize the project details during our consultation.
-            </Text>
-            <Text fontSize="lg" color="white" textAlign="left" fontStyle="italic" maxW="600px">
-                This breakdown includes the cost for your site's pages, any selected add-ons, media fees, and—if opted in—your monthly maintenance plan.
+            <Text fontSize="lg" color="white" textAlign="left">
+                Here’s the estimated cost based on your info so far. No payment is needed now. The total may adjust after our consultation. This breakdown includes the cost for your site's pages, any selected add-ons, media fees, and—if opted in—your monthly maintenance plan.
             </Text>
             <Box
                 as="section"
@@ -17,7 +14,7 @@ const StepFive = ({ totalPrice, numPages, pricePerPage, additionalFee, addOns, a
                 display="flex"
                 flexDir="column"
                 justifyContent="space-between"
-                width="400px"
+                // width="400px"
                 height="auto"
                 maxH="40vh"
                 overflowY="auto"

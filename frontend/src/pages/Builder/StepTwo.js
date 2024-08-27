@@ -3,7 +3,7 @@ import { VStack, Heading, Text, Textarea, Button, HStack } from "@chakra-ui/reac
 
 const StepTwo = ({ specialRequests, setSpecialRequests, onNext, onBack }) => {
     return (
-        <VStack spacing={6} maxW="100%">
+        <VStack minWidth="350px" spacing={6}>
             <Heading color="teal.300" size="lg" textAlign="center" as="h2">Tell Me Your Vision</Heading>
             <Text fontSize="lg" color="white" textAlign="left">
                 Whether it's the purpose of the site, any special features you have in mind, specific design references, or anything else that's important to you, I’d love to hear it.

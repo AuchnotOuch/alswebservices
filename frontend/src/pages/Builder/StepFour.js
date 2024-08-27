@@ -48,7 +48,7 @@ const StepFour = ({ addOns, setAddOns, setAdditionalFee, setTotalPrice, addOnOpt
     };
 
     return (
-        <VStack spacing={6} alignItems="center" maxW="100%" height="80vh" overflow="hidden">
+        <VStack minWidth="350px" spacing={6} alignItems="center" maxW="100%" height="80vh" overflow="hidden">
             <Text fontSize="lg" color="white" textAlign="center">Select any additional features you'd like to include:</Text>
 
             {!isMobile ? (

@@ -3,7 +3,7 @@ import { VStack, Heading, Text, Input, Button, HStack, Box } from "@chakra-ui/re
 
 const StepSix = ({ name, setName, email, setEmail, phone, setPhone, companyName, setCompanyName, onNext, onBack }) => {
     return (
-        <VStack spacing={1} alignItems="center" textAlign="center">
+        <VStack minWidth="350px" spacing={1} alignItems="center" textAlign="center">
             <Heading as="h2" color="teal.300" size="lg">Contact Information</Heading>
 
             <Box width="100%" maxW="500px">

@@ -3,7 +3,7 @@ import { Heading, VStack, Button, Text, Box, Select, useMediaQuery } from "@chak
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import './StepAppointmentBooking.css';
-import { addDays, format } from 'date-fns';
+import { addDays, format, differenceInMinutes } from 'date-fns';
 
 const StepAppointmentBooking = ({
     date,
@@ -32,7 +32,9 @@ const StepAppointmentBooking = ({
             try {
                 const response = await fetch('/availability');
                 const data = await response.json();
-                setAvailableSlots(data);
+                // Ensure available slots are sorted by date and time
+                const sortedSlots = data.sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
+                setAvailableSlots(sortedSlots);
             } catch (error) {
                 console.error('Error fetching availability:', error);
             }
@@ -76,6 +78,10 @@ const StepAppointmentBooking = ({
 
     const filterAvailableTime = (time) => {
         const selectedTime = new Date(time);
+        const now = new Date();
+
+        // Ensure the selected time is at least 3 hours from now
+        if (differenceInMinutes(selectedTime, now) < 180) return false;
 
         const mountainTime = new Date(selectedTime.toLocaleString('en-US', { timeZone: 'America/Denver' }));
         const hour = mountainTime.getHours();
@@ -84,23 +90,28 @@ const StepAppointmentBooking = ({
 
         const isAvailable = availableSlots.some(slot => {
             const slotStartTime = new Date(slot.startTime);
-
             return selectedTime.getTime() === slotStartTime.getTime();
         });
 
         return withinTimeRange && isAvailable;
     };
 
-    const minDate = new Date();
+    const minDate = new Date(); // Prevent selecting past dates
     const maxDate = addDays(minDate, 45);
 
-    const availableDates = [...new Set(availableSlots.map(slot => format(new Date(slot.startTime), 'yyyy-MM-dd')))];
+    // Unique, sorted dates for the dropdown (exclude past dates)
+    const availableDates = [...new Set(availableSlots
+        .filter(slot => new Date(slot.startTime) >= minDate)
+        .map(slot => format(new Date(slot.startTime), 'yyyy-MM-dd'))
+    )];
+
+    // Times corresponding to the selected date
     const availableTimes = selectedDate ? availableSlots
         .filter(slot => format(new Date(slot.startTime), 'yyyy-MM-dd') === selectedDate)
         .map(slot => format(new Date(slot.startTime), 'HH:mm')) : [];
 
     return (
-        <VStack spacing={8}>
+        <VStack minWidth="350px" spacing={8}>
             <Heading as="h2" size="lg" color="teal.400" textAlign="center">
                 Book Your Appointment
             </Heading>
@@ -117,7 +128,7 @@ const StepAppointmentBooking = ({
                     >
                         {availableDates.map(date => (
                             <option key={date} value={date}>
-                                {format(new Date(date), 'MMMM dd, yyyy')}
+                                {format(new Date(date), 'EEEE, MMMM dd')} {/* Day of the week, Month day */}
                             </option>
                         ))}
                     </Select>

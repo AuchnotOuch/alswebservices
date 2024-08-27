@@ -37,7 +37,7 @@ const StepInfo = ({ onNext }) => {
     };
 
     return (
-        <VStack spacing={6} align="center" textAlign="center">
+        <VStack minWidth="350px" spacing={6} align="center" textAlign="center">
             <Heading as="h2" textAlign="center" color="teal.300" size="lg">Welcome to the Price Builder</Heading>
 
             <Text textAlign="left" fontSize="lg" color="white">

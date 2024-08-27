@@ -3,7 +3,7 @@ import { VStack, HStack, Heading, Text, Switch, Flex, Button } from "@chakra-ui/
 
 const StepMaintenance = ({ maintenanceOptIn, setMaintenanceOptIn, maintenanceCost, onNext, onBack }) => {
     return (
-        <VStack spacing={6} alignItems="center">
+        <VStack minWidth="350px" spacing={6} alignItems="center">
             <Heading as="h2" textAlign="center" color="teal.300" size="lg">Monthly Maintenance Plan</Heading>
             <Text textAlign="left" fontSize="lg" color="white" fontStyle="italic" maxW="600px">
                 Opting into this plan will give you peace of mind knowing that any necessary updates, security patches, or minor adjustments will be handled regularly.

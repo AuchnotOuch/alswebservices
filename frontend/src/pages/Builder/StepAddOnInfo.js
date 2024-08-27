@@ -29,7 +29,7 @@ const StepAddOnInfo = ({ onNext, onBack }) => {
     };
 
     return (
-        <VStack spacing={6} alignItems="center" textAlign="center" height="auto" justifyContent="center" px={4}>
+        <VStack minWidth="350px" spacing={6} alignItems="center" textAlign="center" height="auto" justifyContent="center" px={4}>
             <motion.div
                 key={currentSlide}
                 initial={{ opacity: 0, x: -100 }}
