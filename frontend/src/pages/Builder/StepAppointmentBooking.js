@@ -32,8 +32,15 @@ const StepAppointmentBooking = ({
             try {
                 const response = await fetch('/availability');
                 const data = await response.json();
-                // Ensure available slots are sorted by date and time
-                const sortedSlots = data.sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
+
+                // Convert UTC times to the user's local timezone before displaying
+                const slotsInLocalTimezone = data.map(slot => {
+                    const localStartTime = new Date(slot.startTime).toLocaleString(); // Convert to local timezone
+                    const localEndTime = new Date(slot.endTime).toLocaleString();
+                    return { ...slot, localStartTime, localEndTime };
+                });
+
+                const sortedSlots = slotsInLocalTimezone.sort((a, b) => new Date(a.localStartTime) - new Date(b.localStartTime));
                 setAvailableSlots(sortedSlots);
             } catch (error) {
                 console.error('Error fetching availability:', error);
@@ -147,7 +154,7 @@ const StepAppointmentBooking = ({
                     >
                         {availableTimes.map(time => (
                             <option key={time} value={time}>
-                                {time}
+                                {new Date(time).toLocaleTimeString()} {/* Automatically converts UTC to local time */}
                             </option>
                         ))}
                     </Select>
