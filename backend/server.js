@@ -95,6 +95,8 @@ app.post('/book', async (req, res) => {
         const endOfSlot = new Date(selectedDateTime);
         endOfSlot.setSeconds(59, 999); // Set the last second of the minute
 
+        console.log('Querying AvailableSlot with startOfSlot:', startOfSlot, 'and endOfSlot:', endOfSlot);
+
         // Find the available slot in the database by using a range query
         const slot = await AvailableSlot.findOne({
             startTime: {
@@ -105,6 +107,7 @@ app.post('/book', async (req, res) => {
         });
 
         if (!slot) {
+            console.log('No available slot found for the given time.');
             return res.status(400).json({ error: 'Time slot is no longer available' });
         }
 
