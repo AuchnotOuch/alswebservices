@@ -146,6 +146,22 @@ app.post('/initialize-slots', async (req, res) => {
     }
 });
 
+app.get('/oauth2callback', (req, res) => {
+    const code = req.query.code;
+
+    oAuth2Client.getToken(code, (err, tokens) => {
+        if (err) {
+            console.error('Error retrieving access token', err);
+            return res.status(500).json({ error: 'Error retrieving access token' });
+        }
+
+        oAuth2Client.setCredentials(tokens);
+
+        // You can redirect the user to a success page or handle the tokens as needed
+        res.redirect('/success'); // You might want to change this to an appropriate path
+    });
+});
+
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname + '../frontend/build/index.html'))
 })

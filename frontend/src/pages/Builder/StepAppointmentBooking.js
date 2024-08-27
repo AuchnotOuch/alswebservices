@@ -30,7 +30,7 @@ const StepAppointmentBooking = ({
     useEffect(() => {
         const fetchAvailability = async () => {
             try {
-                const response = await fetch('http://localhost:5000/availability');
+                const response = await fetch('/availability');
                 const data = await response.json();
                 setAvailableSlots(data);
             } catch (error) {
@@ -58,7 +58,7 @@ const StepAppointmentBooking = ({
             time: isMobile ? selectedTime : date.toTimeString().split(' ')[0],
         };
 
-        const response = await fetch('http://localhost:5000/book', {
+        const response = await fetch('/book', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
