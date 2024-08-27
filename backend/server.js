@@ -147,7 +147,7 @@ app.post('/book', async (req, res) => {
 
 app.get('/availability', async (req, res) => {
     try {
-        const availableSlots = await AvailableSlot.find({ isBooked: false });
+        const availableSlots = await AvailableSlot.find({ isBooked: false }); // Only fetch unbooked slots
         res.json(availableSlots);
     } catch (error) {
         console.error('Error fetching availability:', error);

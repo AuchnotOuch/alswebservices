@@ -33,15 +33,10 @@ const StepAppointmentBooking = ({
                 const response = await fetch('/availability');
                 const data = await response.json();
 
-                // Convert UTC times to the user's local timezone before displaying
-                const slotsInLocalTimezone = data.map(slot => {
-                    const localStartTime = new Date(slot.startTime).toLocaleString(); // Convert to local timezone
-                    const localEndTime = new Date(slot.endTime).toLocaleString();
-                    return { ...slot, localStartTime, localEndTime };
-                });
+                // Ensure booked slots are filtered or disabled
+                const availableSlots = data.filter(slot => !slot.isBooked);  // Filter out booked slots
 
-                const sortedSlots = slotsInLocalTimezone.sort((a, b) => new Date(a.localStartTime) - new Date(b.localStartTime));
-                setAvailableSlots(sortedSlots);
+                setAvailableSlots(availableSlots);
             } catch (error) {
                 console.error('Error fetching availability:', error);
             }
@@ -120,7 +115,10 @@ const StepAppointmentBooking = ({
     // Times corresponding to the selected date
     const availableTimes = selectedDate ? availableSlots
         .filter(slot => format(new Date(slot.startTime), 'yyyy-MM-dd') === selectedDate)
-        .map(slot => format(new Date(slot.startTime), 'HH:mm')) : [];
+        .map(slot => ({
+            time: format(new Date(slot.startTime), 'HH:mm'),
+            isBooked: slot.isBooked
+        })) : [];
 
     return (
         <VStack minWidth="350px" spacing={8}>
@@ -152,9 +150,9 @@ const StepAppointmentBooking = ({
                         aria-disabled={!selectedDate}
                         aria-label="Select a time for your appointment"
                     >
-                        {availableTimes.map(time => (
-                            <option key={time} value={time}>
-                                {new Date(time).toLocaleTimeString()} {/* Automatically converts UTC to local time */}
+                        {availableTimes.map(({ time, isBooked }) => (
+                            <option key={time} value={time} disabled={isBooked}>
+                                {time} {isBooked ? "(Booked)" : ""}
                             </option>
                         ))}
                     </Select>
