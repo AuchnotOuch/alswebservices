@@ -76,25 +76,17 @@ app.post('/book', async (req, res) => {
         hasMedia,
         addOns,
         totalPrice,
-        date,
-        time,
+        date,  // Assuming this is already in UTC
     } = req.body;
 
     try {
-        // Convert the date to a UTC date object
-        let selectedDate = new Date(date); // UTC date from frontend
+        // Use the date directly since it's already in UTC
+        const selectedDateTime = new Date(date);
 
-        // Extract the time and set it in the local timezone, then convert it to UTC
-        const [hours, minutes] = time.split(':').map(Number);
-        selectedDate.setUTCHours(hours, minutes, 0, 0); // Set the time to the selected time in UTC
-
-        console.log('Combined UTC Date and Time:', selectedDate.toISOString());
-
-        // Query for the slot using the exact match for startTime
-        console.log('Querying AvailableSlot with selectedDateTime:', selectedDate);
+        console.log('Querying AvailableSlot with selectedDateTime:', selectedDateTime);
 
         const slot = await AvailableSlot.findOne({
-            startTime: selectedDate,
+            startTime: selectedDateTime,
             isBooked: false,
         });
 
@@ -124,7 +116,7 @@ app.post('/book', async (req, res) => {
                 Media Provided: ${hasMedia === 'yes' ? 'Yes' : 'No'}
                 Add Ons: ${addOns}
                 Total Price: ${totalPrice}
-                Appointment Date: ${selectedDate.toISOString()} (UTC)
+                Appointment Date: ${selectedDateTime.toISOString()} (UTC)
             `,
         };
 
