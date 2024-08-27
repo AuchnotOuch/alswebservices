@@ -59,7 +59,7 @@ const StepAppointmentBooking = ({
             date: isMobile ? selectedDate : date,
             time: isMobile ? selectedTime : date.toTimeString().split(' ')[0],
         };
-        console.log(appointmentDetails)
+        console.log('Appointment Details:', appointmentDetails);
         const response = await fetch('/book', {
             method: 'POST',
             headers: {
