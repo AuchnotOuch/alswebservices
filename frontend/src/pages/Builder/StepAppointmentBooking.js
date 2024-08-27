@@ -33,10 +33,14 @@ const StepAppointmentBooking = ({
                 const response = await fetch('/availability');
                 const data = await response.json();
 
-                // Ensure booked slots are filtered or disabled
-                const availableSlots = data.filter(slot => !slot.isBooked);  // Filter out booked slots
+                const slotsInLocalTimezone = data.map(slot => {
+                    const localStartTime = new Date(slot.startTime).toLocaleString('en-US', { timeZone: 'America/Denver' });
+                    const localEndTime = new Date(slot.endTime).toLocaleString('en-US', { timeZone: 'America/Denver' });
+                    return { ...slot, localStartTime, localEndTime };
+                });
 
-                setAvailableSlots(availableSlots);
+                const sortedSlots = slotsInLocalTimezone.sort((a, b) => new Date(a.localStartTime) - new Date(b.localStartTime));
+                setAvailableSlots(sortedSlots);
             } catch (error) {
                 console.error('Error fetching availability:', error);
             }
@@ -121,7 +125,10 @@ const StepAppointmentBooking = ({
 
     // Times corresponding to the selected date
     const availableTimes = selectedDate ? availableSlots
-        .filter(slot => format(new Date(slot.startTime), 'yyyy-MM-dd') === selectedDate)
+        .filter(slot => {
+            const slotDate = format(new Date(slot.startTime), 'yyyy-MM-dd');
+            return slotDate === selectedDate;  // Compare dates correctly
+        })
         .map(slot => ({
             time: format(new Date(slot.startTime), 'HH:mm'),
             isBooked: slot.isBooked
