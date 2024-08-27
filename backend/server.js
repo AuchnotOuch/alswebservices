@@ -82,19 +82,19 @@ app.post('/book', async (req, res) => {
 
     try {
         // Convert the date to a UTC date object
-        let selectedDateTime = new Date(date);
+        let selectedDate = new Date(date); // UTC date from frontend
 
-        // Extract time parts and apply them to the UTC date
-        const timeParts = time.split(':');
-        selectedDateTime.setUTCHours(parseInt(timeParts[0]), parseInt(timeParts[1]), 0, 0); // Set hours and minutes in UTC
+        // Extract the time and set it in the local timezone, then convert it to UTC
+        const [hours, minutes] = time.split(':').map(Number);
+        selectedDate.setUTCHours(hours, minutes, 0, 0); // Set the time to the selected time in UTC
 
-        console.log('Combined UTC Date and Time:', selectedDateTime);
+        console.log('Combined UTC Date and Time:', selectedDate.toISOString());
 
         // Query for the slot using the exact match for startTime
-        console.log('Querying AvailableSlot with selectedDateTime:', selectedDateTime);
+        console.log('Querying AvailableSlot with selectedDateTime:', selectedDate);
 
         const slot = await AvailableSlot.findOne({
-            startTime: selectedDateTime,
+            startTime: selectedDate,
             isBooked: false,
         });
 
@@ -124,7 +124,7 @@ app.post('/book', async (req, res) => {
                 Media Provided: ${hasMedia === 'yes' ? 'Yes' : 'No'}
                 Add Ons: ${addOns}
                 Total Price: ${totalPrice}
-                Appointment Date: ${selectedDateTime.toISOString()} (UTC)
+                Appointment Date: ${selectedDate.toISOString()} (UTC)
             `,
         };
 

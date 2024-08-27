@@ -103,6 +103,13 @@ const StepAppointmentBooking = ({
         return withinTimeRange && isAvailable;
     };
 
+    const isSlotBooked = (time) => {
+        return availableSlots.some(slot => {
+            const slotStartTime = new Date(slot.startTime).getTime();
+            return time.getTime() === slotStartTime && slot.isBooked;
+        });
+    };
+
     const minDate = new Date(); // Prevent selecting past dates
     const maxDate = addDays(minDate, 45);
 
@@ -179,6 +186,8 @@ const StepAppointmentBooking = ({
                         aria-label="Select appointment date and time"
                         onCalendarOpen={() => document.getElementById('datepicker').focus()}
                         onCalendarClose={() => document.getElementById('confirm-btn').focus()}
+                        // Disable booked times in DatePicker
+                        filterDate={time => !isSlotBooked(time)}
                     />
                 </Box>
             )}
