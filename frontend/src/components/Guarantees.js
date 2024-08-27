@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Box, Text, VStack, HStack, IconButton } from "@chakra-ui/react";
+import { Box, Text, VStack, IconButton } from "@chakra-ui/react";
 import { motion } from 'framer-motion';
 import { Link as ScrollLink } from "react-scroll";
 import { FaArrowDown } from "react-icons/fa";
