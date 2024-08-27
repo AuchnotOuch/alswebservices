@@ -90,8 +90,19 @@ app.post('/book', async (req, res) => {
 
         console.log('Combined UTC Date and Time:', selectedDateTime);
 
-        // Find the available slot in the database
-        const slot = await AvailableSlot.findOne({ startTime: selectedDateTime, isBooked: false });
+        // Create a start and end range to ignore milliseconds for the date comparison
+        const startOfSlot = new Date(selectedDateTime);
+        const endOfSlot = new Date(selectedDateTime);
+        endOfSlot.setSeconds(59, 999); // Set the last second of the minute
+
+        // Find the available slot in the database by using a range query
+        const slot = await AvailableSlot.findOne({
+            startTime: {
+                $gte: startOfSlot,
+                $lte: endOfSlot,
+            },
+            isBooked: false,
+        });
 
         if (!slot) {
             return res.status(400).json({ error: 'Time slot is no longer available' });
