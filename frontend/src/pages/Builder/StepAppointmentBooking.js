@@ -59,7 +59,7 @@ const StepAppointmentBooking = ({
             date: isMobile ? selectedDate : date,
             time: isMobile ? selectedTime : date.toTimeString().split(' ')[0],
         };
-        console.log('Appointment Details:', appointmentDetails);
+
         const response = await fetch('/book', {
             method: 'POST',
             headers: {
@@ -69,7 +69,12 @@ const StepAppointmentBooking = ({
         });
 
         if (response.ok) {
+            const result = await response.json();
             console.log("Booking successful!");
+
+            // Update the available slots with the new data returned from the server
+            setAvailableSlots(result.updatedAvailableSlots);
+
             onNext();
         } else {
             console.error("Error booking appointment.");

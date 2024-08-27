@@ -105,7 +105,9 @@ app.post('/book', async (req, res) => {
 
         // Mark the slot as booked
         slot.isBooked = true;
-        await slot.save();
+        await slot.save(); // Ensure the slot is saved to the database before proceeding
+
+        console.log('Slot successfully booked:', slot);
 
         // Send the booking confirmation email
         const mailOptions = {
@@ -129,8 +131,14 @@ app.post('/book', async (req, res) => {
         const transporter = await createTransporter();
         await transporter.sendMail(mailOptions);
 
-        // Send a success response to the client
-        res.status(200).json({ message: 'Appointment booked successfully!' });
+        // Send the updated availability back to the client
+        const updatedAvailableSlots = await AvailableSlot.find({ isBooked: false });
+
+        // Send a success response to the client with the updated availability
+        res.status(200).json({
+            message: 'Appointment booked successfully!',
+            updatedAvailableSlots, // Send the updated slots to the frontend
+        });
     } catch (error) {
         console.error('Error booking appointment:', error);
         res.status(500).json({ error: 'Error booking appointment' });
