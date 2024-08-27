@@ -111,3 +111,7 @@ select,
 option {
     color: #fff !important;
 }
+
+.react-datepicker__navigation {
+    height: 25px !important;
+}
