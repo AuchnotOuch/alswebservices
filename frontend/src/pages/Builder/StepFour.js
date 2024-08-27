@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { VStack, HStack, Button, Heading, Text, CheckboxGroup, Checkbox, SimpleGrid, Box, useBreakpointValue, IconButton, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter } from "@chakra-ui/react";
+import { VStack, HStack, Button, Heading, Text, CheckboxGroup, Checkbox, SimpleGrid, Box, useMediaQuery, IconButton, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { InfoOutlineIcon } from "@chakra-ui/icons";
 
@@ -8,7 +8,8 @@ const StepFour = ({ addOns, setAddOns, setAdditionalFee, setTotalPrice, addOnOpt
     const [selectedAddOnInfo, setSelectedAddOnInfo] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const isMobile = useBreakpointValue({ base: true, md: false });
+    // Change the breakpoint to 1055px
+    const [isMobile] = useMediaQuery("(max-width: 1055px)");
 
     const handleAddOnsChange = (selectedLabels) => {
         setAddOns(selectedLabels);
@@ -67,10 +68,10 @@ const StepFour = ({ addOns, setAddOns, setAdditionalFee, setTotalPrice, addOnOpt
                             key={category}
                             style={{ perspective: 1000 }}
                             onClick={() => setFlippedCategory(flippedCategory === category ? null : category)}
-                            role="region" // Describes the region for screen readers
-                            aria-labelledby={`${category}-heading`} // Matches to the heading
-                            tabIndex="0" // Ensures it is focusable by keyboard
-                            onKeyPress={(e) => e.key === 'Enter' && setFlippedCategory(flippedCategory === category ? null : category)} // Ensures keyboard users can flip cards
+                            role="region"
+                            aria-labelledby={`${category}-heading`}
+                            tabIndex="0"
+                            onKeyPress={(e) => e.key === 'Enter' && setFlippedCategory(flippedCategory === category ? null : category)}
                         >
                             <motion.div
                                 variants={flipVariants}
@@ -146,10 +147,10 @@ const StepFour = ({ addOns, setAddOns, setAdditionalFee, setTotalPrice, addOnOpt
                     <motion.div
                         style={{ perspective: 1000 }}
                         onClick={() => setFlippedCategory(flippedCategory === 'Unsure' ? null : 'Unsure')}
-                        role="region" // Marks it as a section
-                        aria-labelledby="unsure-heading" // Links to the heading for screen readers
-                        tabIndex="0" // Makes it focusable
-                        onKeyPress={(e) => e.key === 'Enter' && setFlippedCategory(flippedCategory === 'Unsure' ? null : 'Unsure')} // Keyboard support for flip
+                        role="region"
+                        aria-labelledby="unsure-heading"
+                        tabIndex="0"
+                        onKeyPress={(e) => e.key === 'Enter' && setFlippedCategory(flippedCategory === 'Unsure' ? null : 'Unsure')}
                     >
                         <motion.div
                             variants={flipVariants}
@@ -245,7 +246,6 @@ const StepFour = ({ addOns, setAddOns, setAdditionalFee, setTotalPrice, addOnOpt
                     </Box>
                 </VStack>
             )}
-
 
             <Modal
                 isOpen={isModalOpen}
