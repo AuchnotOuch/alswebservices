@@ -145,7 +145,7 @@ const StepAppointmentBooking = ({
                     >
                         {availableDates.map(date => (
                             <option key={date} value={date}>
-                                {format(new Date(date), 'EEEE, MMMM dd')} {/* Day of the week, Month day */}
+                                {format(new Date(date), 'EEEE, MMMM dd')}
                             </option>
                         ))}
                     </Select>
@@ -157,11 +157,13 @@ const StepAppointmentBooking = ({
                         aria-disabled={!selectedDate}
                         aria-label="Select a time for your appointment"
                     >
-                        {availableTimes.map(({ time, isBooked }) => (
-                            <option key={time} value={time} disabled={isBooked}>
-                                {time} {isBooked ? "(Booked)" : ""}
-                            </option>
-                        ))}
+                        {availableTimes
+                            .filter(({ isBooked }) => !isBooked) // Only show times that are not booked
+                            .map(({ time }) => (
+                                <option key={time} value={time}>
+                                    {time}
+                                </option>
+                            ))}
                     </Select>
                 </VStack>
             ) : (
