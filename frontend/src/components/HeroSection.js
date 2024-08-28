@@ -11,7 +11,7 @@ const HeroSection = () => {
                 width="100vw"
                 bgImage="
                     linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgba(5, 18, 32, 1) 100%),
-                    url('/images/herobackground2.png')
+                    url('/images/herobackground2.webp')
                 "
                 bgSize="cover"
                 bgPosition="center"
