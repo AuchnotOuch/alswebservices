@@ -3,11 +3,9 @@ import { Heading, VStack, Button, Text, Box } from "@chakra-ui/react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import './StepAppointmentBooking.css';
-import { addDays, format, differenceInMinutes } from 'date-fns';
+import { addDays, differenceInMinutes } from 'date-fns';
 
 const StepAppointmentBooking = ({
-    date,
-    setDate,
     name,
     email,
     phone,
@@ -23,7 +21,8 @@ const StepAppointmentBooking = ({
     onBack
 }) => {
     const [availableSlots, setAvailableSlots] = useState([]);
-    const [selectedTime, setSelectedTime] = useState(null); // New state to track selected time
+    const [date, setDate] = useState(null); // Initialize date as null
+    const [selectedTime, setSelectedTime] = useState(null); // Track selected time
 
     useEffect(() => {
         const fetchAvailability = async () => {
@@ -61,7 +60,7 @@ const StepAppointmentBooking = ({
             addOns,
             totalPrice,
             date,
-            time: selectedTime ? selectedTime : date.toTimeString().split(' ')[0], // Use selected time if available
+            time: selectedTime || date.toTimeString().split(' ')[0],
         };
 
         const response = await fetch('/book', {
@@ -85,19 +84,19 @@ const StepAppointmentBooking = ({
     };
 
     const filterAvailableTime = (time) => {
-        const selectedTime = new Date(time);
+        const selectedTimeInstance = new Date(time); // Changed the variable name
         const now = new Date();
 
-        if (differenceInMinutes(selectedTime, now) < 180) return false;
+        if (differenceInMinutes(selectedTimeInstance, now) < 180) return false;
 
-        const mountainTime = new Date(selectedTime.toLocaleString('en-US', { timeZone: 'America/Denver' }));
+        const mountainTime = new Date(selectedTimeInstance.toLocaleString('en-US', { timeZone: 'America/Denver' }));
         const hour = mountainTime.getHours();
 
         const withinTimeRange = hour >= 5 && hour < 13;
 
         const isAvailable = availableSlots.some(slot => {
             const slotStartTime = new Date(slot.startTime);
-            return selectedTime.getTime() === slotStartTime.getTime();
+            return selectedTimeInstance.getTime() === slotStartTime.getTime();
         });
 
         return withinTimeRange && isAvailable;
@@ -132,9 +131,9 @@ const StepAppointmentBooking = ({
             >
                 <DatePicker
                     selected={date}
-                    onChange={(date) => {
-                        setDate(date);
-                        setSelectedTime(date); // Set selected time when date changes
+                    onChange={(selected) => {
+                        setDate(selected); // Set selected date when user chooses
+                        setSelectedTime(selected.toTimeString().split(' ')[0]); // Set selected time when user chooses
                     }}
                     showTimeSelect
                     filterTime={filterAvailableTime}
@@ -155,7 +154,7 @@ const StepAppointmentBooking = ({
                 size="lg"
                 onClick={handleSubmit}
                 isFullWidth
-                disabled={!date || !selectedTime} // Disable if date or time is not selected
+                disabled={!date || !selectedTime} // Button disabled if date is not selected
                 _disabled={{
                     bg: "gray.400",
                     cursor: "not-allowed",
