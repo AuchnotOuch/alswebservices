@@ -152,6 +152,10 @@ const StepAppointmentBooking = ({
                 onClick={handleSubmit}
                 isFullWidth
                 disabled={!date}
+                _disabled={{
+                    bg: "gray.400",
+                    cursor: "not-allowed",
+                }}
             >
                 Confirm Appointment
             </Button>
