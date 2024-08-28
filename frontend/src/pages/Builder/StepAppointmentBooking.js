@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Heading, VStack, Button, Text, Box, Select, useMediaQuery } from "@chakra-ui/react";
+import { Heading, VStack, Button, Text, Box } from "@chakra-ui/react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import './StepAppointmentBooking.css';
@@ -23,9 +23,6 @@ const StepAppointmentBooking = ({
     onBack
 }) => {
     const [availableSlots, setAvailableSlots] = useState([]);
-    const [isMobile] = useMediaQuery("(max-width: 768px)");
-    const [selectedDate, setSelectedDate] = useState('');
-    const [selectedTime, setSelectedTime] = useState('');
 
     useEffect(() => {
         const fetchAvailability = async () => {
@@ -62,8 +59,8 @@ const StepAppointmentBooking = ({
             hasMedia,
             addOns,
             totalPrice,
-            date: isMobile ? selectedDate : date,
-            time: isMobile ? selectedTime : date.toTimeString().split(' ')[0],
+            date,
+            time: date.toTimeString().split(' ')[0],
         };
 
         const response = await fetch('/book', {
@@ -117,23 +114,6 @@ const StepAppointmentBooking = ({
     const minDate = new Date(); // Prevent selecting past dates
     const maxDate = addDays(minDate, 45);
 
-    // Unique, sorted dates for the dropdown (exclude past dates)
-    const availableDates = [...new Set(availableSlots
-        .filter(slot => new Date(slot.startTime) >= minDate)
-        .map(slot => format(new Date(slot.startTime), 'yyyy-MM-dd'))
-    )];
-
-    // Times corresponding to the selected date
-    const availableTimes = selectedDate ? availableSlots
-        .filter(slot => {
-            const slotDate = format(new Date(slot.startTime), 'yyyy-MM-dd');
-            return slotDate === selectedDate;  // Compare dates correctly
-        })
-        .map(slot => ({
-            time: format(new Date(slot.startTime), 'HH:mm'),
-            isBooked: slot.isBooked
-        })) : [];
-
     return (
         <VStack minWidth="350px" spacing={8}>
             <Heading as="h2" size="lg" color="teal.400" textAlign="center">
@@ -143,63 +123,30 @@ const StepAppointmentBooking = ({
                 Please select a date and time for your appointment below. Available times are shown.
             </Text>
 
-            {isMobile ? (
-                <VStack spacing={4}>
-                    <Select
-                        placeholder="Select a date"
-                        onChange={(e) => setSelectedDate(e.target.value)}
-                        aria-label="Select a date for your appointment"
-                    >
-                        {availableDates.map(date => (
-                            <option key={date} value={date}>
-                                {format(new Date(date), 'EEEE, MMMM dd')}
-                            </option>
-                        ))}
-                    </Select>
-
-                    <Select
-                        placeholder="Select a time"
-                        onChange={(e) => setSelectedTime(e.target.value)}
-                        isDisabled={!selectedDate}
-                        aria-disabled={!selectedDate}
-                        aria-label="Select a time for your appointment"
-                    >
-                        {availableTimes
-                            .filter(({ isBooked }) => !isBooked) // Only show times that are not booked
-                            .map(({ time }) => (
-                                <option key={time} value={time}>
-                                    {time}
-                                </option>
-                            ))}
-                    </Select>
-                </VStack>
-            ) : (
-                <Box
-                    bgGradient="linear(to-br, gray.700, gray.900)"
-                    p={6}
-                    borderRadius="lg"
-                    boxShadow="2xl"
-                    borderWidth="2px"
-                    borderColor="teal.400"
-                >
-                    <DatePicker
-                        selected={date}
-                        onChange={(date) => setDate(date)}
-                        showTimeSelect
-                        filterTime={filterAvailableTime}
-                        minDate={minDate}
-                        maxDate={maxDate}
-                        dateFormat="Pp"
-                        inline
-                        className="custom-datepicker"
-                        aria-label="Select appointment date and time"
-                        onCalendarOpen={() => document.getElementById('datepicker').focus()}
-                        onCalendarClose={() => document.getElementById('confirm-btn').focus()}
-                        // Disable booked times in DatePicker
-                        filterDate={time => !isSlotBooked(time)}
-                    />
-                </Box>
-            )}
+            <Box
+                bgGradient="linear(to-br, gray.700, gray.900)"
+                p={6}
+                borderRadius="lg"
+                boxShadow="2xl"
+                borderWidth="2px"
+                borderColor="teal.400"
+            >
+                <DatePicker
+                    selected={date}
+                    onChange={(date) => setDate(date)}
+                    showTimeSelect
+                    filterTime={filterAvailableTime}
+                    minDate={minDate}
+                    maxDate={maxDate}
+                    dateFormat="Pp"
+                    inline
+                    className="custom-datepicker"
+                    aria-label="Select appointment date and time"
+                    onCalendarOpen={() => document.getElementById('datepicker').focus()}
+                    onCalendarClose={() => document.getElementById('confirm-btn').focus()}
+                    filterDate={time => !isSlotBooked(time)}
+                />
+            </Box>
 
             <Button colorScheme="teal" size="lg" onClick={handleSubmit} isFullWidth>
                 Confirm Appointment
