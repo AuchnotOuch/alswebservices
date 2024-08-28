@@ -23,6 +23,7 @@ const StepAppointmentBooking = ({
     onBack
 }) => {
     const [availableSlots, setAvailableSlots] = useState([]);
+    const [selectedTime, setSelectedTime] = useState(null); // New state to track selected time
 
     useEffect(() => {
         const fetchAvailability = async () => {
@@ -60,7 +61,7 @@ const StepAppointmentBooking = ({
             addOns,
             totalPrice,
             date,
-            time: date.toTimeString().split(' ')[0],
+            time: selectedTime ? selectedTime : date.toTimeString().split(' ')[0], // Use selected time if available
         };
 
         const response = await fetch('/book', {
@@ -131,7 +132,10 @@ const StepAppointmentBooking = ({
             >
                 <DatePicker
                     selected={date}
-                    onChange={(date) => setDate(date)}
+                    onChange={(date) => {
+                        setDate(date);
+                        setSelectedTime(date); // Set selected time when date changes
+                    }}
                     showTimeSelect
                     filterTime={filterAvailableTime}
                     minDate={minDate}
@@ -151,7 +155,7 @@ const StepAppointmentBooking = ({
                 size="lg"
                 onClick={handleSubmit}
                 isFullWidth
-                disabled={!date}
+                disabled={!date || !selectedTime} // Disable if date or time is not selected
                 _disabled={{
                     bg: "gray.400",
                     cursor: "not-allowed",
