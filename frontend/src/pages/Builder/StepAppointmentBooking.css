@@ -113,5 +113,25 @@ option {
 }
 
 .react-datepicker__navigation {
-    height: 25px !important;
+    height: 25px;
+}
+
+@media only screen and (max-width: 610px) {
+    .react-datepicker {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+    }
+
+    .react-datepicker__month-container {
+        width: 100% !important;
+    }
+
+    .react-datepicker__time-container {
+        width: 100% !important;
+    }
+
+    .react-datepicker__time-box {
+        width: 100% !important;
+    }
 }
