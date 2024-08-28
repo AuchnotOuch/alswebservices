@@ -75,7 +75,6 @@ const StepAppointmentBooking = ({
             const result = await response.json();
             console.log("Booking successful!");
 
-            // Update the available slots with the new data returned from the server
             setAvailableSlots(result.updatedAvailableSlots);
 
             onNext();
@@ -88,7 +87,6 @@ const StepAppointmentBooking = ({
         const selectedTime = new Date(time);
         const now = new Date();
 
-        // Ensure the selected time is at least 3 hours from now
         if (differenceInMinutes(selectedTime, now) < 180) return false;
 
         const mountainTime = new Date(selectedTime.toLocaleString('en-US', { timeZone: 'America/Denver' }));
@@ -111,7 +109,7 @@ const StepAppointmentBooking = ({
         });
     };
 
-    const minDate = new Date(); // Prevent selecting past dates
+    const minDate = new Date();
     const maxDate = addDays(minDate, 45);
 
     return (
@@ -148,7 +146,13 @@ const StepAppointmentBooking = ({
                 />
             </Box>
 
-            <Button colorScheme="teal" size="lg" onClick={handleSubmit} isFullWidth>
+            <Button
+                colorScheme="teal"
+                size="lg"
+                onClick={handleSubmit}
+                isFullWidth
+                disabled={!date}
+            >
                 Confirm Appointment
             </Button>
             <Button colorScheme="teal" size="lg" variant="outline" onClick={onBack} isFullWidth>
