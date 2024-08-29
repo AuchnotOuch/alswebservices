@@ -6,6 +6,8 @@ import './StepAppointmentBooking.css';
 import { addDays, differenceInMinutes } from 'date-fns';
 
 const StepAppointmentBooking = ({
+    date,
+    setDate,
     name,
     email,
     phone,
@@ -21,9 +23,8 @@ const StepAppointmentBooking = ({
     onBack
 }) => {
     const [availableSlots, setAvailableSlots] = useState([]);
-    const [date, setDate] = useState(null); // Initialize date as null
-    const [selectedTime, setSelectedTime] = useState(null); // Track selected time
-
+    const [userInteracted, setUserInteracted] = useState(false);
+    console.log(userInteracted)
     useEffect(() => {
         const fetchAvailability = async () => {
             try {
@@ -60,7 +61,7 @@ const StepAppointmentBooking = ({
             addOns,
             totalPrice,
             date,
-            time: selectedTime || date.toTimeString().split(' ')[0],
+            time: date ? date.toTimeString().split(' ')[0] : null,
         };
 
         const response = await fetch('/book', {
@@ -84,7 +85,7 @@ const StepAppointmentBooking = ({
     };
 
     const filterAvailableTime = (time) => {
-        const selectedTimeInstance = new Date(time); // Changed the variable name
+        const selectedTimeInstance = new Date(time);
         const now = new Date();
 
         if (differenceInMinutes(selectedTimeInstance, now) < 180) return false;
@@ -131,9 +132,9 @@ const StepAppointmentBooking = ({
             >
                 <DatePicker
                     selected={date}
-                    onChange={(selected) => {
-                        setDate(selected); // Set selected date when user chooses
-                        setSelectedTime(selected.toTimeString().split(' ')[0]); // Set selected time when user chooses
+                    onChange={(date) => {
+                        setDate(date);
+                        setUserInteracted(true);
                     }}
                     showTimeSelect
                     filterTime={filterAvailableTime}
@@ -143,8 +144,6 @@ const StepAppointmentBooking = ({
                     inline
                     className="custom-datepicker"
                     aria-label="Select appointment date and time"
-                    onCalendarOpen={() => document.getElementById('datepicker').focus()}
-                    onCalendarClose={() => document.getElementById('confirm-btn').focus()}
                     filterDate={time => !isSlotBooked(time)}
                 />
             </Box>
@@ -154,10 +153,10 @@ const StepAppointmentBooking = ({
                 size="lg"
                 onClick={handleSubmit}
                 isFullWidth
-                disabled={!date || !selectedTime} // Button disabled if date is not selected
+                isDisabled={!userInteracted} // Also check user interaction
                 _disabled={{
-                    bg: "gray.400",
-                    cursor: "not-allowed",
+                    bg: "gray.400 !important",
+                    cursor: "not-allowed !important",
                 }}
             >
                 Confirm Appointment

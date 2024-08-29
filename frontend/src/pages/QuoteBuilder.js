@@ -28,8 +28,8 @@ const QuoteBuilder = () => {
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
     const [companyName, setCompanyName] = useState("");
-    const [date, setDate] = useState("");
-    const [time, setTime] = useState("");
+    const [date, setDate] = useState(null);
+    const [time, setTime] = useState(null);
 
     const addOnOptions = [
         {
