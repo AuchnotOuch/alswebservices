@@ -62,7 +62,6 @@ const createTransporter = async () => {
 
 
 app.post('/book', async (req, res) => {
-    console.log('Booking request received:', req.body);
 
     const {
         name,
